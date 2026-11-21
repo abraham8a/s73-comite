@@ -8,13 +8,13 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wrap">
+<main class="wrap"><section id="pin-gate" class="paper narrow"><h1>Acceso al formulario</h1><p>Escriba el código de acceso que recibió.</p><form id="pin-form"><div class="q"><label for="pin-code">Código de acceso</label><input type="password" id="pin-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></div><div id="pin-msg" class="msg err" hidden></div><button type="submit">Continuar</button></form></section>
   <div id="done" class="paper" hidden>
     <h1>Solicitud enviada</h1>
     <p style="text-align:center">Gracias. Los ancianos de tu congregación revisarán tu solicitud.</p>
   </div>
 
-  <form id="form" class="paper" autocomplete="on">
+  <form id="form" class="paper" autocomplete="on" hidden>
     <h1>Solicitud para la predicación pública especial en áreas metropolitanas</h1>
 
     <!-- 1 -->
@@ -145,6 +145,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="form.js"></script>
+<script src="form.js?v=20261121-pin"></script>
 </body>
 </html>
