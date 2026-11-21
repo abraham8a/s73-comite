@@ -7,7 +7,7 @@
 
   const $ = (id) => document.getElementById(id);
   const form = $('form');
-  const msg = $('msg');
+  const gate = $('pin-gate'), pinForm = $('pin-form'), pinInput = $('pin-code'), pinMsg = $('pin-msg'); const ACCESS_PIN = '1946'; if (sessionStorage.getItem('s73-applicant-access') === 'granted') { gate.hidden = true; form.hidden = false; } pinForm.addEventListener('submit', (e) => { e.preventDefault(); if (pinInput.value === ACCESS_PIN) { sessionStorage.setItem('s73-applicant-access', 'granted'); gate.hidden = true; form.hidden = false; $('apellidos').focus(); } else { pinMsg.textContent = 'Código incorrecto. Inténtelo de nuevo.'; pinMsg.hidden = false; pinInput.select(); } }); const msg = $('msg');
   const DIAS = [['lunes', 'Lunes'], ['martes', 'Martes'], ['miercoles', 'Miércoles'], ['jueves', 'Jueves'], ['viernes', 'Viernes']];
   const CODES = [['M', 'M – Mañana'], ['T', 'T – Tarde'], ['N', 'N – Noche'], ['MD', 'MD – Medio día'], ['TD', 'TD – Todo el día'], ['NP', 'NP – No puedo']];
 
