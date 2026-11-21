@@ -120,7 +120,7 @@ function showLogin(message) {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return showLogin();
     const authParams = new URLSearchParams(location.hash.slice(1));
-    if (authParams.get('type') === 'invite') return showPasswordSetup();
+    if (['invite', 'recovery'].includes(authParams.get('type'))) return showPasswordSetup();
     const { data: prof, error } = await sb.from('profiles').select('nombre,rol').eq('user_id', session.user.id).maybeSingle();
     if (error) { $app.innerHTML = errBox(error); return; }
     if (!prof) { await sb.auth.signOut(); return showLogin('Tu cuenta aún no tiene un rol asignado. Avisa al administrador.'); }
