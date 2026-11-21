@@ -61,7 +61,7 @@
     $who.textContent = ''; $logout.hidden = true; me = null;
     $app.innerHTML =
       '<section class="paper narrow"><h2>Configura tu contraseña</h2>' +
-      '<p>La invitación fue aceptada. Crea una contraseña para futuros accesos.</p>' +
+      '<p>Crea una contraseña para futuros accesos.</p>' +
       '<form id="set-password">' +
       '<div class="q"><label for="new-pw">Nueva contraseña</label><input type="password" id="new-pw" required minlength="8" autocomplete="new-password"></div>' +
       '<div class="q"><label for="confirm-pw">Confirma la contraseña</label><input type="password" id="confirm-pw" required minlength="8" autocomplete="new-password"></div>' +
