@@ -1,6 +1,16 @@
 (function () {
   const cfg = window.APP_CONFIG;
+  const authParamsAtStart = new URLSearchParams(location.hash.slice(1));
+  const initialAuthType = authParamsAtStart.get('type');
+  const initialAuthError = authParamsAtStart.get('error_code');
   const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  let recoveryEvent = false;
+  sb.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      recoveryEvent = true;
+      showPasswordSetup();
+    }
+  });
 
   const ROLES = [
     { key: 'coordinador', label: 'Coordinador del cuerpo de ancianos', short: 'Coordinador' },
@@ -87,8 +97,9 @@
 
 function showLogin(message) {
     const authParams = new URLSearchParams(location.hash.slice(1));
-    if (!message && authParams.get('error_code') === 'otp_expired') {
-      message = 'El enlace de invitación venció o ya se usó. Solicita que te envíen uno nuevo.';
+    if (!message && initialAuthError === 'otp_expired') {
+      message = 'El enlace venció o ya se usó. Solicita que te envíen uno nuevo.';
+      history.replaceState(null, '', location.pathname + location.search);
     }
     $who.textContent = ''; $logout.hidden = true; me = null;
     $app.innerHTML = `
@@ -120,7 +131,7 @@ function showLogin(message) {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return showLogin();
     const authParams = new URLSearchParams(location.hash.slice(1));
-    if (['invite', 'recovery'].includes(authParams.get('type'))) return showPasswordSetup();
+    if (recoveryEvent || ['invite', 'recovery'].includes(initialAuthType)) return showPasswordSetup();
     const { data: prof, error } = await sb.from('profiles').select('nombre,rol').eq('user_id', session.user.id).maybeSingle();
     if (error) { $app.innerHTML = errBox(error); return; }
     if (!prof) { await sb.auth.signOut(); return showLogin('Tu cuenta aún no tiene un rol asignado. Avisa al administrador.'); }
