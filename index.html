@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Solicitud para la predicación pública especial en áreas metropolitanas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <div id="done" class="paper" hidden>
+    <h1>Solicitud enviada</h1>
+    <p style="text-align:center">Gracias. Los ancianos de tu congregación revisarán tu solicitud.</p>
+  </div>
+
+  <form id="form" class="paper" autocomplete="on">
+    <h1>Solicitud para la predicación pública especial en áreas metropolitanas</h1>
+
+    <!-- 1 -->
+    <h3>1. Nombre legal</h3>
+    <div class="grid">
+      <div><label for="apellidos">Apellidos</label><input type="text" id="apellidos" name="apellidos" required maxlength="120" autocomplete="family-name"></div>
+      <div><label for="primer_nombre">Primer nombre</label><input type="text" id="primer_nombre" name="primer_nombre" required maxlength="120" autocomplete="given-name"></div>
+      <div><label for="segundo_nombre">Segundo nombre</label><input type="text" id="segundo_nombre" name="segundo_nombre" maxlength="120" autocomplete="additional-name"></div>
+    </div>
+
+    <!-- 2 -->
+    <h3>2. Dirección</h3>
+    <div class="grid">
+      <div style="grid-column:1/-1"><label for="direccion">Calle, número, carretera o apartado postal</label><input type="text" id="direccion" name="direccion" required maxlength="300" autocomplete="street-address"></div>
+      <div><label for="ciudad">Ciudad</label><input type="text" id="ciudad" name="ciudad" required maxlength="120" autocomplete="address-level2"></div>
+      <div><label for="estado">Provincia o estado</label><input type="text" id="estado" name="estado" required maxlength="120" autocomplete="address-level1"></div>
+      <div><label for="codigo_postal">Código postal</label><input type="text" id="codigo_postal" name="codigo_postal" required maxlength="20" autocomplete="postal-code"></div>
+      <div><label for="email">Dirección electrónica</label><input type="email" id="email" name="email" maxlength="200" autocomplete="email"></div>
+      <div><label for="tel_fijo">Teléfono fijo</label><input type="tel" id="tel_fijo" name="tel_fijo" maxlength="40" autocomplete="tel"></div>
+      <div><label for="celular">Celular</label><input type="tel" id="celular" name="celular" required maxlength="40" autocomplete="tel"></div>
+    </div>
+
+    <!-- 3 -->
+    <h3>3. Congregación</h3>
+    <div class="grid">
+      <div><label for="cong_nombre">Nombre</label><input type="text" id="cong_nombre" name="cong_nombre" required maxlength="200"></div>
+      <div><label for="cong_ciudad">Ciudad</label><input type="text" id="cong_ciudad" name="cong_ciudad" required maxlength="120"></div>
+      <div><label for="cong_estado">Provincia o estado</label><input type="text" id="cong_estado" name="cong_estado" required maxlength="120"></div>
+    </div>
+
+    <!-- 4 -->
+    <h3>4. ¿Qué idiomas habla con fluidez?</h3>
+    <div class="q"><input type="text" name="idiomas" required maxlength="300" aria-label="Idiomas"></div>
+
+    <!-- 5 -->
+    <h3>5. Fechas y sexo</h3>
+    <div class="grid">
+      <div><label for="fecha_nacimiento">Fecha de nacimiento</label><input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required></div>
+      <div><label for="fecha_bautismo">Fecha de bautismo</label><input type="date" id="fecha_bautismo" name="fecha_bautismo" required></div>
+      <div>
+        <label>Sexo</label>
+        <div class="opts">
+          <label><input type="radio" name="sexo" value="masculino" required> Masculino</label>
+          <label><input type="radio" name="sexo" value="femenino" required> Femenino</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <h3>6. Estado civil</h3>
+    <div class="q">
+      <div class="opts">
+        <label><input type="radio" name="estado_civil" value="casado" required> Casado</label>
+        <label><input type="radio" name="estado_civil" value="soltero" required> Soltero</label>
+        <label><input type="radio" name="estado_civil" value="divorciado" required> Divorciado</label>
+        <label><input type="radio" name="estado_civil" value="separado" required> Separado</label>
+        <label><input type="radio" name="estado_civil" value="viudo" required> Viudo</label>
+      </div>
+    </div>
+    <div class="q" id="conyugeBox" hidden>
+      <label for="conyuge">Si está casado, indique el nombre de su cónyuge</label>
+      <input type="text" id="conyuge" name="conyuge" maxlength="200">
+    </div>
+
+    <!-- 7 -->
+    <h3>7. Sirve como (marque todo lo que corresponda)</h3>
+    <div class="q">
+      <div class="opts">
+        <label><input type="checkbox" name="sirve_como" value="Misionero que sirve en el campo"> Misionero que sirve en el campo</label>
+        <label><input type="checkbox" name="sirve_como" value="Precursor especial"> Precursor especial</label>
+        <label><input type="checkbox" name="sirve_como" value="Miembro de la familia Betel"> Miembro de la familia Betel</label>
+        <label><input type="checkbox" name="sirve_como" value="Precursor regular"> Precursor regular</label>
+        <label><input type="checkbox" name="sirve_como" value="Publicador"> Publicador</label>
+        <label><input type="checkbox" name="sirve_como" value="Anciano"> Anciano</label>
+        <label><input type="checkbox" name="sirve_como" value="Siervo ministerial"> Siervo ministerial</label>
+        <label><input type="checkbox" id="otroChk"> Otro</label>
+      </div>
+      <input type="text" id="sirve_otro" name="sirve_otro" maxlength="200" placeholder="Especifique" hidden style="margin-top:8px">
+    </div>
+
+    <!-- 8 -->
+    <h3>8. ¿Tiene el deseo y la capacidad de seguir la dirección teocrática en la predicación pública?</h3>
+    <div class="q"><div class="opts">
+      <label><input type="radio" name="desea_capacidad" value="si" required> Sí</label>
+      <label><input type="radio" name="desea_capacidad" value="no" required> No</label>
+    </div></div>
+
+    <!-- 9 -->
+    <h3>9. ¿Ha participado en la predicación pública en áreas metropolitanas antes?</h3>
+    <div class="q"><div class="opts">
+      <label><input type="radio" name="participo_antes" value="si" required> Sí</label>
+      <label><input type="radio" name="participo_antes" value="no" required> No</label>
+    </div></div>
+    <div class="q" id="lugaresBox" hidden>
+      <label for="lugares">En caso afirmativo, ¿en qué lugares?</label>
+      <input type="text" id="lugares" name="lugares" maxlength="500">
+    </div>
+
+    <!-- Disponibilidad -->
+    <h3>Indique qué días entre semana está disponible</h3>
+    <div class="legend">M = Mañana · T = Tarde · N = Noche · MD = Medio día · TD = Todo el día · NP = No puedo</div>
+    <div class="grid five" id="diasGrid"></div>
+
+    <h3>Indique cuántos días de fin de semana al mes puede servir</h3>
+    <div class="grid">
+      <div><label for="sabado">Sábado</label><input type="number" id="sabado" name="sabado" min="0" max="5" inputmode="numeric" required></div>
+      <div><label for="domingo">Domingo</label><input type="number" id="domingo" name="domingo" min="0" max="5" inputmode="numeric" required></div>
+    </div>
+
+    <div class="consent">
+      <strong>La presentación de esta solicitud no es garantía de que se le invite a participar en la predicación pública especial en áreas metropolitanas.</strong>
+      Entiendo que si no lleno completamente este formulario los ancianos no podrán determinar si califico para este privilegio de servicio. Estoy de acuerdo en proporcionar mis datos personales incluidos en este formulario para ayudar a los ancianos de mi congregación a valorar mis capacidades para esta labor. También doy mi consentimiento a la sucursal de los testigos de Jehová que supervisa las actividades de los testigos de Jehová en mi zona geográfica, o a cualquiera de sus representantes, para que procesen y retengan para su uso la información de este formulario.
+    </div>
+
+    <div class="grid">
+      <div><label for="firma">Firma (escriba su nombre para indicar la firma)</label><input type="text" id="firma" name="firma" required maxlength="200"></div>
+      <div><label for="firma_fecha">Fecha</label><input type="date" id="firma_fecha" name="firma_fecha" required></div>
+    </div>
+
+    <!-- honeypot against bots -->
+    <div class="hp" aria-hidden="true"><label>No llenar <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <div id="msg" class="msg err" hidden></div>
+    <button type="submit" id="send">Enviar solicitud</button>
+    <p class="muted small">S-73-S 9/19</p>
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="form.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+:root{
+  --ink:#1d1d24; --muted:#5d6068; --line:#c9ccd3; --bg:#f1f2f5; --paper:#fff;
+  --accent:#1f4e79; --accent-ink:#fff; --ok:#1d7a46; --warn:#9a6a00; --err:#b3261e;
+}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:920px;margin:0 auto;padding:16px}
+.narrow{max-width:420px;margin-left:auto;margin-right:auto}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:22px;margin-bottom:16px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;text-transform:uppercase;letter-spacing:.02em;margin:0 0 14px;line-height:1.2}
+h1{font-size:1.35rem;text-align:center}
+h2{font-size:1.05rem;border-bottom:2px solid var(--ink);padding-bottom:6px}
+h3{font-size:.95rem;margin:18px 0 8px}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+
+/* top bar (committee) */
+.topbar{background:var(--ink);color:#fff;display:flex;gap:12px;align-items:center;padding:10px 16px;flex-wrap:wrap}
+.topbar strong{flex:1}
+.topbar button{background:transparent;color:#fff;border-color:#888}
+
+/* form controls */
+label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:3px}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],input[type=password],input[type=search],select,textarea{
+  width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+.grid.five{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.q{margin:0 0 14px}
+.q>.qt{font-weight:600;margin-bottom:5px}
+.opts{display:flex;flex-wrap:wrap;gap:6px 18px}
+.opts label{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-size:1rem;margin:0}
+.opts input{width:auto}
+.legend{background:#f6f7f9;border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:.88rem;margin-bottom:12px}
+.hidden,[hidden]{display:none!important}
+.hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+
+button,.btn{font:inherit;padding:9px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+button.secondary{background:#fff;color:var(--accent)}
+button:disabled{opacity:.6;cursor:default}
+.msg{padding:10px 12px;border-radius:6px;margin:12px 0;font-size:.95rem}
+.msg.err{background:#fdeceb;color:var(--err);border:1px solid #f3b9b5}
+.msg.ok{background:#e7f5ec;color:var(--ok);border:1px solid #b5dfc4}
+.consent{font-size:.9rem;margin:18px 0}
+.consent strong{display:block;text-align:center;margin-bottom:10px;font-size:1rem}
+
+/* tables */
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+thead th{background:#f3f4f7}
+td.c{text-align:center;font-weight:700;font-size:1.05rem}
+tr.click{cursor:pointer}
+tr.click:hover{background:#f6f9fd}
+.chip{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);margin:1px 2px 1px 0;white-space:nowrap}
+.chip.ok{background:#e7f5ec;color:var(--ok);border-color:#b5dfc4}
+.chip.warn{background:#fff6dd;color:var(--warn);border-color:#ecd48a}
+.status{font-weight:600}
+.status.Completo{color:var(--ok)} .status.En-revision{color:var(--warn)}
+
+dl.info{display:grid;grid-template-columns:minmax(120px,200px) 1fr;gap:6px 14px;margin:0}
+dl.info dt{color:var(--muted);font-size:.88rem}
+dl.info dd{margin:0}
+
+.comment{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin:0 0 12px}
+.comment .meta{font-size:.82rem;color:var(--muted)}
+.comment .body{white-space:pre-wrap}
+.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+
+@media (max-width:560px){
+  .paper{padding:16px}
+  dl.info{grid-template-columns:1fr}
+  dl.info dt{margin-top:6px}
+}
+
+@media print{
+  body{background:#fff}
+  .no-print,.topbar{display:none!important}
+  .paper{border:none;padding:0;margin-bottom:18px;break-inside:avoid}
+  .wrap{max-width:none;padding:0}
+}
