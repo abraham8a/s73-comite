@@ -57,7 +57,39 @@
   const statusClass = (s) => s.replace(' ', '-').replace('ó', 'o');
 
   // ---------- login ----------
-  function showLogin(message) {
+    function showPasswordSetup() {
+    $who.textContent = ''; $logout.hidden = true; me = null;
+    $app.innerHTML =
+      '<section class="paper narrow"><h2>Configura tu contraseña</h2>' +
+      '<p>La invitación fue aceptada. Crea una contraseña para futuros accesos.</p>' +
+      '<form id="set-password">' +
+      '<div class="q"><label for="new-pw">Nueva contraseña</label><input type="password" id="new-pw" required minlength="8" autocomplete="new-password"></div>' +
+      '<div class="q"><label for="confirm-pw">Confirma la contraseña</label><input type="password" id="confirm-pw" required minlength="8" autocomplete="new-password"></div>' +
+      '<div id="pmsg"></div><button type="submit">Guardar contraseña</button></form></section>';
+    document.getElementById('set-password').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('new-pw').value;
+      const confirmation = document.getElementById('confirm-pw').value;
+      const $message = document.getElementById('pmsg');
+      if (password !== confirmation) {
+        $message.innerHTML = '<div class="msg err">Las contraseñas no coinciden.</div>';
+        return;
+      }
+      const { error } = await sb.auth.updateUser({ password });
+      if (error) {
+        $message.innerHTML = '<div class="msg err">No se pudo guardar la contraseña: ' + esc(error.message) + '</div>';
+        return;
+      }
+      history.replaceState(null, '', location.pathname + location.search);
+      await boot();
+    });
+  }
+
+function showLogin(message) {
+    const authParams = new URLSearchParams(location.hash.slice(1));
+    if (!message && authParams.get('error_code') === 'otp_expired') {
+      message = 'El enlace de invitación venció o ya se usó. Solicita que te envíen uno nuevo.';
+    }
     $who.textContent = ''; $logout.hidden = true; me = null;
     $app.innerHTML = `
       <section class="paper narrow">
@@ -87,6 +119,8 @@
     if (cfg.SUPABASE_URL.includes('TU-PROYECTO')) { $app.innerHTML = '<div class="msg err">Falta configurar config.js</div>'; return; }
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return showLogin();
+    const authParams = new URLSearchParams(location.hash.slice(1));
+    if (authParams.get('type') === 'invite') return showPasswordSetup();
     const { data: prof, error } = await sb.from('profiles').select('nombre,rol').eq('user_id', session.user.id).maybeSingle();
     if (error) { $app.innerHTML = errBox(error); return; }
     if (!prof) { await sb.auth.signOut(); return showLogin('Tu cuenta aún no tiene un rol asignado. Avisa al administrador.'); }
