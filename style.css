@@ -81,3 +81,13 @@ dl.info dd{margin:0}
   .paper{border:none;padding:0;margin-bottom:18px;break-inside:avoid}
   .wrap{max-width:none;padding:0}
 }
+
+.hojas-s73 { display: none; }
+@page { size: letter portrait; margin: 0; }
+@media print {
+  body:has(.hojas-s73), #app:has(.hojas-s73) { margin: 0; padding: 0; width: 100%; max-width: none; }
+  #app:has(.hojas-s73) > :not(.hojas-s73) { display: none !important; }
+  .hojas-s73 { display: block; }
+  .hojas-s73 svg { display: block; width: 8.5in; height: 11in; break-inside: avoid; }
+  .hojas-s73 svg + svg { break-before: page; }
+}

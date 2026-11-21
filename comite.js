@@ -295,7 +295,8 @@ function showLogin(message) {
         ${flash ? `<div class="msg ok">${esc(flash)}</div>` : ''}${myFormHtml(byRole[me.rol])}</section>
       <section class="paper"><h2>Comentarios</h2><div id="clist">${commentsHtml(c.data || [])}</div>
         <form id="cform" class="no-print"><label for="cbody">Agregar comentario</label><textarea id="cbody" required maxlength="2000"></textarea>
-          <div id="cmsg"></div><button type="submit">Publicar comentario</button></form></section>`;
+          <div id="cmsg"></div><button type="submit">Publicar comentario</button></form></section>
+      ${hojasSolicitud(app, byRole, { ROLES, QUESTIONS, CRITERIA, DIAS, YN, esc, fmtDate })}`;
     window.scrollTo(0, y);
 
     document.getElementById('print').addEventListener('click', () => window.print());
