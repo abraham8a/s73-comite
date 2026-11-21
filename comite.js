@@ -110,10 +110,10 @@ function showLogin(message) {
           <div class="q"><label for="em">Correo</label><input type="email" id="em" required autocomplete="username"></div>
           <div class="q"><label for="pw">Contraseña</label><input type="password" id="pw" required autocomplete="current-password"></div>
           <div id="lmsg"></div>
-          <button type="submit">Entrar</button>
+<button type="submit">Entrar</button><p><a href="#" id="forgot-password">¿Olvidaste tu contraseña?</a></p>
         </form>
       </section>`;
-    document.getElementById('login').addEventListener('submit', async (e) => {
+    document.getElementById('forgot-password').addEventListener('click', async (e) => { e.preventDefault(); const email = document.getElementById('em').value.trim(); const $status = document.getElementById('lmsg'); if (!email) { $status.innerHTML = '<div class="msg err">Escribe tu correo para enviarte un enlace.</div>'; document.getElementById('em').focus(); return; } const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); $status.innerHTML = error ? '<div class="msg err">No se pudo enviar el enlace. Inténtalo más tarde.</div>' : '<div class="msg ok">Si el correo corresponde a una cuenta, recibirás un enlace para restablecer la contraseña.</div>'; }); document.getElementById('login').addEventListener('submit', async (e) => {
       e.preventDefault();
       const { error } = await sb.auth.signInWithPassword({
         email: document.getElementById('em').value.trim(),
