@@ -129,6 +129,12 @@ updateSummary();
 form.onsubmit = async event => {
   event.preventDefault();
   const entries = new FormData(form);
+  const signedName = entries.get('firma').trim();
+  if (!signedName) {
+    status.textContent = 'Escriba su nombre completo en la firma.';
+    form.elements.firma.focus();
+    return;
+  }
   const dates = activeMonths().map(month => month + '-01');
   if (!dates.length) {
     monthError.textContent = form.elements.continuo.checked
@@ -143,9 +149,9 @@ form.onsubmit = async event => {
   status.textContent = 'Enviando…';
   try {
     const { error } = await db.rpc('submit_aux_application', {
-      applicant: entries.get('nombre'), congregation: entries.get('congregacion'),
+      applicant: signedName, congregation: entries.get('congregacion'),
       months: dates, ongoing: entries.has('continuo'), attested: entries.has('declaracion'),
-      signature: entries.get('firma')
+      signature: signedName
     });
     if (error) throw error;
     form.hidden = true;

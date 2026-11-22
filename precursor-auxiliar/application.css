@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Allura;
+  src: url("fonts/Allura-Regular.woff") format("woff");
+  font-display: swap;
+}
 .sheet {
   margin: 12px auto;
   padding: clamp(20px, 5vw, 64px);
@@ -25,7 +30,12 @@
 .date-line time { flex: 1; text-align: center; border-bottom: 1px dotted; }
 .sheet .signed-line { text-align: center; }
 .sheet .signed-line input { border: 0; border-bottom: 1px dotted; border-radius: 0; padding: .2rem .4rem; text-align: center; }
-.printed-name { grid-column: 2; }
+.sheet .signed-line input {
+  font-family: Allura, "Snell Roundhand", "Segoe Script", cursive;
+  font-size: 1.85rem;
+  line-height: 1.3;
+}
+.sheet .signed-line input::placeholder { font: 1rem Georgia, serif; }
 .sheet .congregation { display: flex; }
 .congregation select { max-width: 15rem; }
 .committee-note { margin-top: 1.3rem; max-width: 64ch; font-size: .96rem; font-weight: bold; }
@@ -36,7 +46,6 @@
 @media (max-width: 600px) {
   .sheet { margin: 0; }
   .signatures { grid-template-columns: 1fr; }
-  .printed-name { grid-column: auto; }
   .period, .sheet .congregation { display: block; }
   #month-options { grid-template-columns: repeat(2, 1fr); }
 }
