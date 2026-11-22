@@ -105,3 +105,14 @@ dl.info dd{margin:0}
 .aux-list { display: grid; gap: .75rem; }
 .aux-list button { text-align: left; }
 .aux-list small { display: block; }
+
+@font-face {
+  font-family: Allura;
+  src: url("precursor-auxiliar/fonts/Allura-Regular.woff") format("woff");
+  font-display: swap;
+}
+#firma {
+  font-family: Allura, "Snell Roundhand", "Segoe Script", cursive;
+  font-size: 1.85rem;
+  line-height: 1.3;
+}
