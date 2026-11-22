@@ -7,10 +7,39 @@ const months = document.querySelector('#months');
 const addMonth = document.querySelector('#add-month');
 const status = document.querySelector('#status');
 
+const accessCode = '1946';
+const accessKey = 'auxiliar-applicant-access';
+const gate = document.querySelector('#pin-gate');
+const panel = document.querySelector('#application-panel');
+const codeInput = document.querySelector('#pin-code');
+const codeMessage = document.querySelector('#pin-msg');
+
+function showApplication() {
+  gate.hidden = true;
+  panel.hidden = false;
+}
+
+if (sessionStorage.getItem(accessKey) === 'granted') showApplication();
+document.querySelector('#pin-form').addEventListener('submit', event => {
+  event.preventDefault();
+  if (codeInput.value !== accessCode) {
+    codeMessage.hidden = false;
+    codeMessage.textContent = 'Código incorrecto. Inténtelo de nuevo.';
+    codeInput.select();
+    return;
+  }
+  sessionStorage.setItem(accessKey, 'granted');
+  showApplication();
+  form.elements.nombre.focus();
+});
+
 function updateMonths() {
   const ongoing = form.elements.continuo.checked;
-  if (ongoing) [...months.children].slice(1).forEach(row => row.remove());
-  months.firstElementChild.firstElementChild.textContent = ongoing ? 'Mes de inicio' : 'Mes de servicio';
+  for (const row of Array.from(months.children).slice(1)) {
+    row.hidden = ongoing;
+    row.querySelector('input').disabled = ongoing;
+  }
+  months.firstElementChild.querySelector('span').textContent = ongoing ? 'Mes de inicio' : 'Mes de servicio';
   addMonth.hidden = ongoing || months.children.length >= 24;
 }
 

@@ -18,18 +18,14 @@ aprobaciones y permisos de Auxiliar usan tablas propias.
    where user_id in ('UUID-COORDINADOR', 'UUID-SECRETARIO', 'UUID-SUPERINTENDENTE');
    ```
 
-3. Despliegue `supabase/functions/aux-notify` con `--no-verify-jwt`. Configure
-   `AUX_WEBHOOK_SECRET` con un secreto aleatorio, `AUX_SECRETARY_EMAIL` con la
-   misma dirección de aviso de Metropolitan, `AUX_FROM_EMAIL` con un remitente
-   verificado en Resend, `RESEND_API_KEY` y `AUX_COMMITTEE_URL` con el enlace
-   HTTPS directo a la bandeja Auxiliar. Configure un webhook de base de datos
-   para INSERT en `public.aux_notifications` hacia esa función, con
-   `Authorization: Bearer <AUX_WEBHOOK_SECRET>`. Mantenga estos valores fuera
-   del código público. Los avisos no incluyen nombres ni detalles de la solicitud.
-   Revise los errores del webhook y reintente el evento si el proveedor falla.
-4. Publique el sitio y realice una prueba con datos ficticios. Compruebe que un
-   usuario de Metropolitan sin membresía Auxiliar no puede leer sus solicitudes,
-   ni abrirlas por la API. Compruebe que se recibe un aviso al enviar y otro tras
-   la tercera inicial, que cada cuenta solo firma una vez y que el PDF refleja
-   las tres iniciales. Compruebe que el selector navega a la otra bandeja y que
-   las solicitudes de prueba permanecen en Auxiliar.
+3. Publique el sitio y compruebe el acceso al formulario con el código de
+   Metropolitan. Cada portal recuerda el acceso por separado en la pestaña.
+   El código del navegador solo controla la presentación del formulario.
+4. Verifique la selección de meses, el acceso de los tres miembros, sus
+   aprobaciones individuales y el PDF con datos ficticios.
+
+## Notificaciones pendientes
+
+El envío de correo al secretario queda pendiente para una actualización
+posterior del proceso existente de Gmail Apps Script. Los eventos de
+recepción y aprobación se registran en `aux_notifications`.

@@ -9,6 +9,17 @@
 </head>
 <body>
 <main class="wrap">
+  <section id="pin-gate" class="paper narrow">
+    <h1>Acceso al formulario</h1>
+    <p>Escriba el código de acceso que recibió.</p>
+    <form id="pin-form">
+      <label for="pin-code">Código de acceso</label>
+      <input type="password" id="pin-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required>
+      <p id="pin-msg" class="msg err" role="alert" hidden></p>
+      <button type="submit">Continuar</button>
+    </form>
+  </section>
+  <section id="application-panel" hidden>
   <h1>Solicitud para el servicio de precursor auxiliar</h1>
   <p>Debido a mi amor a Jehová y mi deseo de ayudar al prójimo a aprender acerca de él y sus amorosos propósitos, quisiera aumentar mi participación en el servicio del campo siendo precursor auxiliar durante el período indicado abajo.</p>
   <form id="application">
@@ -28,6 +39,7 @@
     <button type="submit">Enviar solicitud</button>
   </form>
   <p id="status" role="status"></p>
+  </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
