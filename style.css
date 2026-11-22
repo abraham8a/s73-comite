@@ -91,3 +91,10 @@ dl.info dd{margin:0}
   .hojas-s73 svg { display: block; width: 8.5in; height: 11in; break-inside: avoid; }
   .hojas-s73 svg + svg { break-before: page; }
 }
+
+.portal-switch { color: inherit; font-size: .9rem; }
+.portal-switch[hidden] { display: none; }
+.portal-switch select { display: block; width: 100%; margin-top: .25rem; }
+.aux-list { display: grid; gap: .75rem; }
+.aux-list button { text-align: left; }
+.aux-list small { display: block; }

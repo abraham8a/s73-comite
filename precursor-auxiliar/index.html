@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Solicitud para el servicio de precursor auxiliar</title>
+<link rel="stylesheet" href="../style.css?v=portal1">
+</head>
+<body>
+<main class="wrap">
+  <section id="pin-gate" class="paper narrow">
+    <h1>Acceso al formulario</h1>
+    <p>Escriba el código de acceso que recibió.</p>
+    <form id="pin-form">
+      <label for="pin-code">Código de acceso</label>
+      <input type="password" id="pin-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required>
+      <p id="pin-msg" class="msg err" role="alert" hidden></p>
+      <button type="submit">Continuar</button>
+    </form>
+  </section>
+  <section id="application-panel" hidden>
+  <h1>Solicitud para el servicio de precursor auxiliar</h1>
+  <p>Debido a mi amor a Jehová y mi deseo de ayudar al prójimo a aprender acerca de él y sus amorosos propósitos, quisiera aumentar mi participación en el servicio del campo siendo precursor auxiliar durante el período indicado abajo.</p>
+  <form id="application">
+    <p><label>Congregación
+      <select name="congregacion" required><option selected>Las Brisas Spanish</option></select>
+    </label></p>
+    <p><label>Nombre completo <input name="nombre" autocomplete="name" maxlength="160" required></label></p>
+    <fieldset>
+      <legend>Período de servicio</legend>
+      <label><input type="checkbox" name="continuo"> De continuo hasta nuevo aviso</label>
+      <div id="months"></div>
+      <button type="button" id="add-month" class="secondary">Añadir otro mes</button>
+    </fieldset>
+    <p><label><input name="declaracion" type="checkbox" required> Gozo de una buena reputación moral y tengo buenos hábitos. He hecho planes para satisfacer el requisito de horas.</label></p>
+    <p><label>Firma del solicitante <input name="firma" maxlength="160" required></label></p>
+    <p>Si es posible, envíe la solicitud por lo menos una semana antes de la fecha en que desea comenzar el servicio de precursor auxiliar.</p>
+    <button type="submit">Enviar solicitud</button>
+  </form>
+  <p id="status" role="status"></p>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="form.js"></script>
+</body>
+</html>

@@ -124,7 +124,7 @@ function showLogin(message) {
     });
   }
 
-  $logout.addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
+  $logout.addEventListener('click', async () => { await sb.auth.signOut(); document.getElementById('portal-switch').hidden = true; showLogin(); });
 
   async function boot() {
     if (cfg.SUPABASE_URL.includes('TU-PROYECTO')) { $app.innerHTML = '<div class="msg err">Falta configurar config.js</div>'; return; }
@@ -138,6 +138,9 @@ function showLogin(message) {
     me = { id: session.user.id, nombre: prof.nombre, rol: prof.rol };
     $who.textContent = `${me.nombre} · ${role(me.rol).label}`;
     $logout.hidden = false;
+    const { data: auxMember } = await sb.from('aux_committee')
+      .select('user_id').eq('user_id', session.user.id).maybeSingle();
+    document.getElementById('portal-switch').hidden = !auxMember;
     route();
   }
 

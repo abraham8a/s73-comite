@@ -5,17 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Comité de servicio · S-73-S</title>
-<link rel="stylesheet" href="style.css?v=impresion1">
+<link rel="stylesheet" href="style.css?v=portal1">
 </head>
 <body>
 <header class="topbar no-print">
   <strong>Comité de servicio · S-73-S</strong>
   <span id="who"></span>
+  <label id="portal-switch" class="portal-switch" hidden>Cambiar de portal
+    <select>
+      <option value="comite.html" selected>Predicación metropolitana · S-73-S</option>
+      <option value="precursor-auxiliar/comite.html">Precursor auxiliar · S-205b-S</option>
+    </select>
+  </label>
   <button id="logout" class="secondary" hidden>Cerrar sesión</button>
 </header>
 <main class="wrap" id="app"><p class="muted">Cargando…</p></main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script><script src="impresion.js"></script><script src="comite.js?v=impresion1"></script>
+<script src="config.js"></script><script src="impresion.js"></script><script src="comite.js?v=portal1"></script>
+<script src="portal-switch.js"></script>
 </body>
 </html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comité de servicio · S-205b-S</title>
+<link rel="stylesheet" href="../style.css?v=portal1">
+</head>
+<body>
+<header class="topbar no-print">
+  <strong>Precursor auxiliar · S-205b-S</strong>
+  <span id="who"></span>
+  <label id="portal-switch" class="portal-switch" hidden>Cambiar de portal
+    <select>
+      <option value="../comite.html">Predicación metropolitana · S-73-S</option>
+      <option value="comite.html" selected>Precursor auxiliar · S-205b-S</option>
+    </select>
+  </label>
+  <button id="logout" class="secondary" hidden>Cerrar sesión</button>
+</header>
+<main class="wrap">
+  <h1>Solicitudes de precursor auxiliar</h1>
+  <p>Las Brisas Spanish</p>
+  <p id="status" role="status"></p>
+  <form id="login" hidden>
+    <p><label>Correo <input name="email" type="email" required autocomplete="username"></label></p>
+    <p><label>Contraseña <input name="password" type="password" required autocomplete="current-password"></label></p>
+    <button>Iniciar sesión</button>
+  </form>
+  <section id="inbox" hidden>
+    <label class="no-print">Buscar por nombre <input id="search" type="search"></label>
+    <div id="applications" class="aux-list"></div>
+  </section>
+  <article id="detail" hidden></article>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../portal-switch.js"></script>
+<script src="comite.js"></script>
+</body>
+</html>
