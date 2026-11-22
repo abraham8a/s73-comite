@@ -1,10 +1,12 @@
 @page { size: letter portrait; margin: .6in; }
 body { font-size: 11pt; color: black; }
 h1 { font-size: 16pt; }
-#print-table[hidden] { display: table !important; width: 100%; }
+#print-table[hidden] { display: table !important; width: 100%; table-layout: fixed; }
 #print-table caption { text-align: left; margin-bottom: .6em; font-weight: bold; }
 #print-table th, #print-table td { vertical-align: top; overflow-wrap: anywhere; }
-#print-table th:nth-child(2) { width: 17%; }
+#print-table th:first-child { width: 26%; }
+#print-table th:nth-child(2) { width: 18%; }
+#print-table th:last-child { width: 21%; }
 #print-table thead { display: table-header-group; }
 #print-table tr { break-inside: avoid; }
 #detail { overflow-wrap: anywhere; }
