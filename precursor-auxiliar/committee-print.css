@@ -10,3 +10,35 @@ h1 { font-size: 16pt; }
 #print-table thead { display: table-header-group; }
 #print-table tr { break-inside: avoid; }
 #detail { overflow-wrap: anywhere; }
+
+@font-face {
+  font-family: Allura;
+  src: url("fonts/Allura-Regular.woff") format("woff");
+}
+@page auxiliar-application { size: letter landscape; margin: .55in .65in; }
+main:has(#print-application:not([hidden])) > :not(#print-application) { display: none; }
+#print-application:not([hidden]) {
+  display: block !important;
+  page: auxiliar-application;
+  font: 13pt/1.15 Georgia, "Times New Roman", serif;
+  overflow-wrap: anywhere;
+}
+#print-application h1 { margin-bottom: 16pt; }
+#print-application p { margin: 0 0 8pt; }
+.print-line { border-bottom: 1px dotted; padding: 0 3pt; }
+.print-ongoing { font-size: 11pt; }
+.print-box { display: inline-block; width: 12pt; height: 12pt; line-height: 10pt; border: 1px solid; vertical-align: middle; text-align: center; }
+.print-signatures { display: grid; grid-template-columns: 36% 1fr; gap: 5%; margin-top: 16pt; align-items: start; }
+.print-signatures > div { text-align: center; }
+.print-signatures > div span { display: block; }
+#print-signature { font-family: Allura, cursive; font-size: 21pt; }
+.print-bottom { display: grid; grid-template-columns: 56% 33%; justify-content: space-between; align-items: start; gap: 5%; margin-top: 4pt; break-inside: avoid; }
+.print-note { font-size: 10.5pt; font-weight: bold; }
+.print-note ol { padding-left: 14pt; margin: 0; }
+.print-note li { margin-bottom: 2pt; }
+.print-approvals { text-align: center; }
+#print-application .print-approvals p { margin-bottom: 2pt; }
+.print-approvals ul { padding: 0; margin: 8pt 0 0; list-style: none; text-align: left; font-size: 10.5pt; }
+.print-approvals li { margin-bottom: 7pt; }
+.print-approvals .print-line { display: block; padding: 2pt 0; }
+#print-application footer { font-size: 10pt; margin-top: 12pt; }

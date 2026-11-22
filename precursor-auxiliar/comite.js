@@ -21,8 +21,12 @@ function element(tag, text) {
   return item;
 }
 
+function selectedMonths(item) {
+  return item.meses.map(month => monthFormat.format(new Date(month))).join(', ');
+}
+
 function servicePeriod(item) {
-  const months = item.meses.map(month => monthFormat.format(new Date(month))).join(', ');
+  const months = selectedMonths(item);
   return item.continuo ? 'De continuo hasta nuevo aviso desde ' + months : months;
 }
 
@@ -40,6 +44,7 @@ function showList() {
   activeId = null;
   detail.hidden = true;
   detail.replaceChildren();
+  byId('print-application').hidden = true;
   inbox.hidden = false;
   const matches = filteredApplications();
   byId('applications').replaceChildren(...matches.map(item => {
@@ -66,7 +71,32 @@ function preparePrint() {
   }));
 }
 
+function renderPrintApplication(item) {
+  byId('print-period-label').textContent = item.continuo ? 'Mes de inicio:' : 'El (los) mes(es) de';
+  byId('print-months').textContent = selectedMonths(item);
+  byId('print-ongoing').textContent = item.continuo ? '✓' : '';
+  byId('print-date').textContent = dateFormat.format(new Date(item.created_at));
+  byId('print-signature').textContent = item.firma;
+  byId('print-name').textContent = item.nombre;
+  byId('print-approval-heading').textContent = item.aux_approvals.length === 3
+    ? 'Aprobado por los miembros del comité de servicio:'
+    : 'Aprobaciones del comité de servicio: ' + approvalStatus(item);
+  byId('print-approvals').replaceChildren(...Object.entries(roleNames).map(([role, label]) => {
+    const approval = item.aux_approvals.find(entry => entry.rol === role);
+    const entry = element('li', label);
+    const signed = approval
+      ? approval.iniciales + ' · ' + dateFormat.format(new Date(approval.approved_at))
+      : 'Pendiente';
+    const line = element('span', signed);
+    line.className = 'print-line';
+    entry.append(line);
+    return entry;
+  }));
+  byId('print-application').hidden = false;
+}
+
 function showDetail(item) {
+  renderPrintApplication(item);
   activeId = item.id;
   inbox.hidden = true;
   detail.hidden = false;
