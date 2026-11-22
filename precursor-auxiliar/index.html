@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Solicitud para el servicio de precursor auxiliar</title>
 <link rel="stylesheet" href="../style.css?v=portal1">
+<link rel="stylesheet" href="application.css?v=2">
 </head>
 <body>
 <main class="wrap">
@@ -19,30 +20,52 @@
       <button type="submit">Continuar</button>
     </form>
   </section>
-  <section id="application-panel" hidden>
-  <h1>Solicitud para el servicio de precursor auxiliar</h1>
-  <p>Debido a mi amor a Jehová y mi deseo de ayudar al prójimo a aprender acerca de él y sus amorosos propósitos, quisiera aumentar mi participación en el servicio del campo siendo precursor auxiliar durante el período indicado abajo.</p>
-  <form id="application">
-    <p><label>Congregación
-      <select name="congregacion" required><option selected>Las Brisas Spanish</option></select>
-    </label></p>
-    <p><label>Nombre completo <input name="nombre" autocomplete="name" maxlength="160" required></label></p>
-    <fieldset>
-      <legend>Período de servicio</legend>
-      <label><input type="checkbox" name="continuo"> De continuo hasta nuevo aviso</label>
-      <div id="months"></div>
-      <button type="button" id="add-month" class="secondary">Añadir otro mes</button>
-    </fieldset>
-    <p><label><input name="declaracion" type="checkbox" required> Gozo de una buena reputación moral y tengo buenos hábitos. He hecho planes para satisfacer el requisito de horas.</label></p>
-    <p><label>Firma del solicitante <input name="firma" maxlength="160" required></label></p>
-    <p>Si es posible, envíe la solicitud por lo menos una semana antes de la fecha en que desea comenzar el servicio de precursor auxiliar.</p>
-    <button type="submit">Enviar solicitud</button>
-  </form>
-  <p id="status" role="status"></p>
+  <section id="application-panel" class="sheet" hidden>
+    <h1>Solicitud para el servicio de precursor auxiliar</h1>
+    <form id="application">
+      <p>Debido a mi amor a Jehová y mi deseo de ayudar al prójimo a aprender acerca de él y sus amorosos propósitos, quisiera aumentar mi participación en el servicio del campo siendo precursor auxiliar durante el período indicado abajo:</p>
+      <div class="period">
+        <span id="period-label">El (los) mes(es) de</span>
+        <details id="months">
+          <summary aria-labelledby="period-label month-summary"><span id="month-summary">Seleccione los meses</span></summary>
+          <div class="month-menu">
+            <div class="year-nav">
+              <button type="button" id="previous-year" aria-label="Año anterior">‹</button>
+              <strong id="year" aria-live="polite"></strong>
+              <button type="button" id="next-year" aria-label="Año siguiente">›</button>
+            </div>
+            <div id="month-options" role="group" aria-labelledby="period-label year"></div>
+            <button id="months-done" class="secondary" type="button">Listo</button>
+          </div>
+        </details>
+      </div>
+      <p id="month-error" role="alert" hidden></p>
+      <label class="check-line"><input name="continuo" type="checkbox"> <span>Marque la casilla si desea ser precursor auxiliar de continuo hasta nuevo aviso.</span></label>
+      <label class="check-line declaration"><input name="declaracion" type="checkbox" required> <span>Gozo de una buena reputación moral y tengo buenos hábitos. He hecho planes para satisfacer el requisito de horas. (Vea <em>Nuestro Ministerio del Reino</em> de junio de 2013, página 2).</span></label>
+      <div class="signatures">
+        <div class="date-line">Fecha: <time id="application-date"></time></div>
+        <label class="signed-line"><input type="text" name="firma" maxlength="160" required><span>(Firma del solicitante)</span></label>
+        <label class="signed-line printed-name"><input type="text" name="nombre" autocomplete="name" maxlength="160" required><span>(Nombre en letra de molde)</span></label>
+      </div>
+      <label class="congregation">Congregación
+        <select name="congregacion" required><option selected>Las Brisas Spanish</option></select>
+      </label>
+      <div class="committee-note">
+        <p><strong>NOTA:</strong> Después de llenar esta solicitud, entréguela al coordinador del cuerpo de ancianos. Si es posible, hágalo por lo menos una semana antes de la fecha en que desea comenzar el servicio de precursor auxiliar. No debe enviarse esta solicitud a la sucursal, sino más bien guardarse en los archivos de la congregación.</p>
+        <p>Para el Comité de Servicio de la Congregación:</p>
+        <ol>
+          <li>¿Es el solicitante un buen ejemplo del vivir cristiano?</li>
+          <li>Quienes hayan sido censurados o readmitidos durante el pasado año o todavía estén bajo restricciones no satisfacen los requisitos.</li>
+          <li>¿Han consultado con su superintendente de grupo?</li>
+        </ol>
+      </div>
+      <div class="sheet-footer"><span>S-205b-S&nbsp;&nbsp;&nbsp; 4/15</span><button type="submit">Enviar solicitud</button></div>
+    </form>
+    <p id="status" role="status"></p>
   </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
-<script src="form.js"></script>
+<script src="form.js?v=2"></script>
 </body>
 </html>

@@ -4,7 +4,9 @@ const db = window.supabase.createClient(config.SUPABASE_URL, config.SUPABASE_ANO
 });
 const form = document.querySelector('#application');
 const months = document.querySelector('#months');
-const addMonth = document.querySelector('#add-month');
+const options = document.querySelector('#month-options');
+const summary = document.querySelector('#month-summary');
+const monthError = document.querySelector('#month-error');
 const status = document.querySelector('#status');
 
 const accessCode = '1946';
@@ -30,53 +32,110 @@ document.querySelector('#pin-form').addEventListener('submit', event => {
   }
   sessionStorage.setItem(accessKey, 'granted');
   showApplication();
-  form.elements.nombre.focus();
+  months.querySelector('summary').focus();
 });
 
-function updateMonths() {
-  const ongoing = form.elements.continuo.checked;
-  for (const row of Array.from(months.children).slice(1)) {
-    row.hidden = ongoing;
-    row.querySelector('input').disabled = ongoing;
-  }
-  months.firstElementChild.querySelector('span').textContent = ongoing ? 'Mes de inicio' : 'Mes de servicio';
-  addMonth.hidden = ongoing || months.children.length >= 24;
+const localDate = new Intl.DateTimeFormat('es', {
+  dateStyle: 'long', timeZone: 'America/Chicago'
+});
+const today = new Date();
+document.querySelector('#application-date').textContent = localDate.format(today);
+let year = Number(new Intl.DateTimeFormat('en', {
+  year: 'numeric', timeZone: 'America/Chicago'
+}).format(today));
+const monthNames = Array.from({ length: 12 }, (_, index) =>
+  new Intl.DateTimeFormat('es', { month: 'long', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(2000, index, 1)))
+);
+const selected = new Set();
+let startMonth = '';
+
+function activeMonths() {
+  return form.elements.continuo.checked ? (startMonth ? [startMonth] : []) : [...selected].sort();
 }
 
-function appendMonth() {
-  const row = document.createElement('p');
-  const label = document.createElement('label');
-  const caption = document.createElement('span');
-  caption.textContent = 'Mes de servicio';
-  const input = document.createElement('input');
-  input.type = 'month';
-  input.name = 'mes';
-  input.required = true;
-  input.pattern = '[0-9]{4}-(0[1-9]|1[0-2])';
-  input.placeholder = 'AAAA-MM';
-  label.append(caption, input);
-  row.append(label);
-  if (months.children.length) {
-    const remove = document.createElement('button');
-    remove.type = 'button';
-    remove.className = 'secondary';
-    remove.textContent = 'Quitar mes';
-    remove.onclick = () => { row.remove(); updateMonths(); };
-    row.append(remove);
-  }
-  months.append(row);
-  updateMonths();
+function updateSummary() {
+  const values = activeMonths();
+  summary.textContent = values.length ? values.map(value => {
+    const [y, m] = value.split('-');
+    return monthNames[Number(m) - 1] + ' ' + y;
+  }).join(', ') : (form.elements.continuo.checked ? 'Seleccione el mes de inicio' : 'Seleccione los meses');
 }
-appendMonth();
-addMonth.onclick = appendMonth;
-form.elements.continuo.onchange = updateMonths;
+
+function renderOptions() {
+  const ongoing = form.elements.continuo.checked;
+  document.querySelector('#year').textContent = year;
+  document.querySelector('#previous-year').disabled = year <= 1;
+  document.querySelector('#next-year').disabled = year >= 9999;
+  options.replaceChildren(...monthNames.map((name, index) => {
+    const value = String(year).padStart(4, '0') + '-' + String(index + 1).padStart(2, '0');
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    input.type = ongoing ? 'radio' : 'checkbox';
+    input.name = 'month-choice';
+    input.value = value;
+    input.checked = ongoing ? startMonth === value : selected.has(value);
+    label.append(input, name);
+    return label;
+  }));
+}
+
+options.addEventListener('change', event => {
+  const input = event.target;
+  if (form.elements.continuo.checked) {
+    startMonth = input.value;
+  } else if (!input.checked) {
+    selected.delete(input.value);
+  } else if (selected.size < 24) {
+    selected.add(input.value);
+  } else {
+    input.checked = false;
+    monthError.textContent = 'Puede seleccionar hasta 24 meses.';
+    monthError.hidden = false;
+    return;
+  }
+  monthError.hidden = true;
+  updateSummary();
+});
+
+form.elements.continuo.addEventListener('change', () => {
+  if (form.elements.continuo.checked) {
+    startMonth = [...selected].sort()[0] || startMonth;
+  } else if (!selected.size && startMonth) {
+    selected.add(startMonth);
+  }
+  const first = activeMonths()[0];
+  if (first) year = Number(first.slice(0, 4));
+  document.querySelector('#period-label').textContent = form.elements.continuo.checked
+    ? 'Mes de inicio' : 'El (los) mes(es) de';
+  monthError.hidden = true;
+  renderOptions();
+  updateSummary();
+});
+
+document.querySelector('#previous-year').onclick = () => { year--; renderOptions(); };
+document.querySelector('#next-year').onclick = () => { year++; renderOptions(); };
+function closeMonths() {
+  months.open = false;
+  months.querySelector('summary').focus();
+}
+document.querySelector('#months-done').onclick = closeMonths;
+months.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && months.open) closeMonths();
+});
+renderOptions();
+updateSummary();
 
 form.onsubmit = async event => {
   event.preventDefault();
   const entries = new FormData(form);
-  const dates = entries.getAll('mes').map(month => month + '-01');
-  if (dates.length !== new Set(dates).size) {
-    status.textContent = 'Seleccione cada mes una sola vez.';
+  const dates = activeMonths().map(month => month + '-01');
+  if (!dates.length) {
+    monthError.textContent = form.elements.continuo.checked
+      ? 'Seleccione el mes de inicio.' : 'Seleccione al menos un mes.';
+    monthError.hidden = false;
+    months.open = true;
+    options.querySelector('input').focus();
     return;
   }
   const button = form.querySelector('[type=submit]');
@@ -85,7 +144,7 @@ form.onsubmit = async event => {
   try {
     const { error } = await db.rpc('submit_aux_application', {
       applicant: entries.get('nombre'), congregation: entries.get('congregacion'),
-      months: dates.sort(), ongoing: entries.has('continuo'), attested: entries.has('declaracion'),
+      months: dates, ongoing: entries.has('continuo'), attested: entries.has('declaracion'),
       signature: entries.get('firma')
     });
     if (error) throw error;
