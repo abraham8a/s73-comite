@@ -51,7 +51,8 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const role = (k) => ROLES.find((r) => r.key === k);
   const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
-  const fmtDate = (s) => { if (!s) return '—'; const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; };
+  const MESES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const fmtDate = (s) => { if (!s) return '—'; const [y, m, d] = s.split('-'); return `${+d} de ${MESES_ES[+m - 1]} del ${y}`; };
   const fmtDT = (s) => new Date(s).toLocaleString('es-US', { dateStyle: 'short', timeStyle: 'short' });
   const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const fullName = (a) => [a.primer_nombre, a.segundo_nombre, a.apellidos].filter(Boolean).join(' ');

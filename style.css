@@ -27,6 +27,13 @@ input[type=text],input[type=email],input[type=tel],input[type=date],input[type=n
 textarea{min-height:80px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+.grid.fechas{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
+.fecha{display:flex;align-items:center;gap:6px}
+.fecha select,.fecha input{min-width:0}
+.fecha select:first-child{flex:0 0 66px}
+.fecha select:nth-of-type(2){flex:1 1 130px}
+.fecha input[type=number]{flex:0 0 80px}
+.fecha select,.fecha input[type=number]{padding-left:8px;padding-right:6px}
 .grid.five{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
 .q{margin:0 0 14px}
 .q>.qt{font-weight:600;margin-bottom:5px}

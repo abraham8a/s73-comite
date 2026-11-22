@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Solicitud para la predicación pública especial en áreas metropolitanas</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=metro-fields1">
 </head>
 <body>
 <main class="wrap"><section id="pin-gate" class="paper narrow"><h1>Acceso al formulario</h1><p>Escriba el código de acceso que recibió.</p><form id="pin-form"><div class="q"><label for="pin-code">Código de acceso</label><input type="password" id="pin-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></div><div id="pin-msg" class="msg err" hidden></div><button type="submit">Continuar</button></form></section>
@@ -29,10 +29,10 @@
     <h3>2. Dirección</h3>
     <div class="grid">
       <div style="grid-column:1/-1"><label for="direccion">Calle, número, carretera o apartado postal</label><input type="text" id="direccion" name="direccion" required maxlength="300" autocomplete="street-address"></div>
-      <div><label for="ciudad">Ciudad</label><input type="text" id="ciudad" name="ciudad" required maxlength="120" autocomplete="address-level2"></div>
-      <div><label for="estado">Provincia o estado</label><input type="text" id="estado" name="estado" required maxlength="120" autocomplete="address-level1"></div>
+      <div><label for="ciudad">Ciudad</label><input type="text" id="ciudad" name="ciudad" value="Brownsville" required maxlength="120" autocomplete="address-level2"></div>
+      <div><label for="estado">Provincia o estado</label><input type="text" id="estado" name="estado" value="Texas" required maxlength="120" autocomplete="address-level1"></div>
       <div><label for="codigo_postal">Código postal</label><input type="text" id="codigo_postal" name="codigo_postal" required maxlength="20" autocomplete="postal-code"></div>
-      <div><label for="email">Dirección electrónica</label><input type="email" id="email" name="email" maxlength="200" autocomplete="email"></div>
+      <div><label for="email">Correo electrónico</label><input type="email" id="email" name="email" maxlength="200" autocomplete="email"></div>
       <div><label for="tel_fijo">Teléfono fijo</label><input type="tel" id="tel_fijo" name="tel_fijo" maxlength="40" autocomplete="tel"></div>
       <div><label for="celular">Celular</label><input type="tel" id="celular" name="celular" required maxlength="40" autocomplete="tel"></div>
     </div>
@@ -40,20 +40,33 @@
     <!-- 3 -->
     <h3>3. Congregación</h3>
     <div class="grid">
-      <div><label for="cong_nombre">Nombre</label><input type="text" id="cong_nombre" name="cong_nombre" required maxlength="200"></div>
-      <div><label for="cong_ciudad">Ciudad</label><input type="text" id="cong_ciudad" name="cong_ciudad" required maxlength="120"></div>
-      <div><label for="cong_estado">Provincia o estado</label><input type="text" id="cong_estado" name="cong_estado" required maxlength="120"></div>
+      <div><label for="cong_nombre">Nombre</label><input type="text" id="cong_nombre" name="cong_nombre" value="Las Brisas Spanish" required maxlength="200"></div>
+      <div><label for="cong_ciudad">Ciudad</label><input type="text" id="cong_ciudad" name="cong_ciudad" value="Brownsville" required maxlength="120"></div>
+      <div><label for="cong_estado">Provincia o estado</label><input type="text" id="cong_estado" name="cong_estado" value="Texas" required maxlength="120"></div>
     </div>
 
     <!-- 4 -->
     <h3>4. ¿Qué idiomas habla con fluidez?</h3>
-    <div class="q"><input type="text" name="idiomas" required maxlength="300" aria-label="Idiomas"></div>
+    <div class="grid">
+      <div>
+        <select id="idiomas_sel" aria-label="Idiomas" required>
+          <option value="">Seleccione…</option>
+          <option>Español</option>
+          <option>Inglés</option>
+          <option>Español e inglés</option>
+          <option value="__otro">Otro</option>
+        </select>
+      </div>
+      <div id="idiomasOtroBox" hidden><input type="text" id="idiomas_otro" maxlength="300" placeholder="Escriba los idiomas" aria-label="Otros idiomas"></div>
+    </div>
 
     <!-- 5 -->
     <h3>5. Fechas y sexo</h3>
+    <div class="grid fechas">
+      <div class="fecha-campo"><label for="fecha_nacimiento_d">Fecha de nacimiento</label><div class="fecha" data-fecha="fecha_nacimiento"><input type="hidden" id="fecha_nacimiento" name="fecha_nacimiento"></div></div>
+      <div class="fecha-campo"><label for="fecha_bautismo_d">Fecha de bautismo</label><div class="fecha" data-fecha="fecha_bautismo"><input type="hidden" id="fecha_bautismo" name="fecha_bautismo"></div></div>
+    </div>
     <div class="grid">
-      <div><label for="fecha_nacimiento">Fecha de nacimiento</label><input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required></div>
-      <div><label for="fecha_bautismo">Fecha de bautismo</label><input type="date" id="fecha_bautismo" name="fecha_bautismo" required></div>
       <div>
         <label>Sexo</label>
         <div class="opts">
@@ -131,7 +144,7 @@
 
     <div class="grid">
       <div><label for="firma">Firma (escriba su nombre para indicar la firma)</label><input type="text" id="firma" name="firma" required maxlength="200"></div>
-      <div><label for="firma_fecha">Fecha</label><input type="date" id="firma_fecha" name="firma_fecha" required></div>
+      <div class="fecha-campo"><label for="firma_fecha_d">Fecha</label><div class="fecha" data-fecha="firma_fecha"><input type="hidden" id="firma_fecha" name="firma_fecha"></div></div>
     </div>
 
     <!-- honeypot against bots -->
@@ -145,6 +158,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="form.js?v=20261121-pin"></script>
+<script src="form.js?v=metro-fields1"></script>
 </body>
 </html>
