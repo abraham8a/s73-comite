@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Comité de servicio · S-205b-S</title>
 <link rel="stylesheet" href="../style.css?v=portal1">
+<link rel="stylesheet" href="committee-print.css" media="print">
 </head>
 <body>
 <header class="topbar no-print">
@@ -22,21 +23,27 @@
 <main class="wrap">
   <h1>Solicitudes de precursor auxiliar</h1>
   <p>Las Brisas Spanish</p>
-  <p id="status" role="status"></p>
-  <form id="login" hidden>
+  <p id="status" class="no-print" role="status"></p>
+  <form id="login" class="no-print" hidden>
     <p><label>Correo <input name="email" type="email" required autocomplete="username"></label></p>
     <p><label>Contraseña <input name="password" type="password" required autocomplete="current-password"></label></p>
     <button>Iniciar sesión</button>
   </form>
   <section id="inbox" hidden>
     <label class="no-print">Buscar por nombre <input id="search" type="search"></label>
-    <div id="applications" class="aux-list"></div>
+    <p class="no-print"><button type="button" id="print-list" class="secondary" disabled>Imprimir lista o guardar PDF</button></p>
+    <div id="applications" class="aux-list no-print"></div>
+    <table id="print-table" hidden>
+      <caption>Solicitudes seleccionadas</caption>
+      <thead><tr><th scope="col">Solicitante</th><th scope="col">Recibida</th><th scope="col">Período de servicio</th><th scope="col">Aprobaciones</th></tr></thead>
+      <tbody></tbody>
+    </table>
   </section>
   <article id="detail" hidden></article>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../portal-switch.js"></script>
-<script src="comite.js"></script>
+<script src="comite.js?v=print1"></script>
 </body>
 </html>

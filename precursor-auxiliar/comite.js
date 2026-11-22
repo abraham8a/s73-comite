@@ -21,22 +21,49 @@ function element(tag, text) {
   return item;
 }
 
+function servicePeriod(item) {
+  const months = item.meses.map(month => monthFormat.format(new Date(month))).join(', ');
+  return item.continuo ? 'De continuo hasta nuevo aviso desde ' + months : months;
+}
+
+function approvalStatus(item) {
+  const count = item.aux_approvals.length;
+  return count === 3 ? 'Aprobada · 3 de 3' : `Pendiente · ${count} de 3`;
+}
+
+function filteredApplications() {
+  const filter = byId('search').value.trim().toLocaleLowerCase('es');
+  return applications.filter(item => item.nombre.toLocaleLowerCase('es').includes(filter));
+}
+
 function showList() {
   activeId = null;
   detail.hidden = true;
   detail.replaceChildren();
   inbox.hidden = false;
-  const filter = byId('search').value.trim().toLocaleLowerCase('es');
-  const matches = applications.filter(item => item.nombre.toLocaleLowerCase('es').includes(filter));
+  const matches = filteredApplications();
   byId('applications').replaceChildren(...matches.map(item => {
     const button = element('button', item.nombre);
-    const count = item.aux_approvals.length;
     button.className = 'secondary';
-    button.append(element('small', count === 3 ? 'Aprobada · 3 de 3' : `Pendiente · ${count} de 3`));
+    button.append(element('small', approvalStatus(item)));
     button.onclick = () => showDetail(item);
     return button;
   }));
+  byId('print-list').disabled = matches.length === 0;
   if (!matches.length) byId('applications').append(element('p', 'No hay solicitudes.'));
+}
+
+function preparePrint() {
+  if (!member || inbox.hidden) return;
+  const table = byId('print-table');
+  const matches = filteredApplications();
+  table.querySelector('caption').textContent = 'Total de solicitudes: ' + matches.length;
+  table.querySelector('tbody').replaceChildren(...matches.map(item => {
+    const row = document.createElement('tr');
+    row.append(element('td', item.nombre), element('td', dateFormat.format(new Date(item.created_at))),
+      element('td', servicePeriod(item)), element('td', approvalStatus(item)));
+    return row;
+  }));
 }
 
 function showDetail(item) {
@@ -46,15 +73,12 @@ function showDetail(item) {
   const back = element('button', 'Volver a solicitudes');
   back.className = 'secondary no-print';
   back.onclick = showList;
-  const months = item.meses.map(month => monthFormat.format(new Date(month))).join(', ');
-  const period = item.continuo ? `De continuo hasta nuevo aviso desde ${months}` : months;
-  const count = item.aux_approvals.length;
   detail.replaceChildren(
     back, element('h2', item.nombre),
-    element('p', period), element('p', 'Firma del solicitante: ' + item.firma),
+    element('p', servicePeriod(item)), element('p', 'Firma del solicitante: ' + item.firma),
     element('p', 'Recibida: ' + dateFormat.format(new Date(item.created_at))),
     element('p', 'El solicitante confirmó la declaración del formulario.'),
-    element('h3', count === 3 ? 'Aprobada · 3 de 3' : `Pendiente · ${count} de 3`)
+    element('h3', approvalStatus(item))
   );
   const roles = document.createElement('ul');
   for (const [role, label] of Object.entries(roleNames)) {
@@ -63,12 +87,11 @@ function showDetail(item) {
       dateFormat.format(new Date(approval.approved_at)) : 'Pendiente'}`));
   }
   detail.append(roles);
-  if (count === 3) {
-    const print = element('button', 'Imprimir o guardar PDF');
-    print.className = 'secondary no-print';
-    print.onclick = () => window.print();
-    detail.append(print);
-  } else if (!item.aux_approvals.some(entry => entry.rol === member.rol)) {
+  const print = element('button', 'Imprimir solicitud o guardar PDF');
+  print.className = 'secondary no-print';
+  print.onclick = () => window.print();
+  detail.append(print);
+  if (!item.aux_approvals.some(entry => entry.rol === member.rol)) {
     const approvalForm = document.createElement('form');
     approvalForm.className = 'no-print';
     const label = element('label', 'Sus iniciales ');
@@ -124,6 +147,8 @@ async function boot() {
   status.textContent = '';
   await loadApplications();
 }
+window.addEventListener('beforeprint', preparePrint);
+byId('print-list').onclick = () => window.print();
 byId('search').oninput = showList;
 byId('logout').onclick = async () => {
   await db.auth.signOut();
