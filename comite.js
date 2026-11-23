@@ -254,16 +254,37 @@ function showLogin(message) {
         const fuente = new URL('precursor-auxiliar/fonts/Allura-Regular.woff', document.baseURI);
         estilos.textContent = `
           @font-face { font-family: Allura; src: url("${fuente.href}") format("woff"); }
-          @page { size: letter portrait; margin: .65in .8in; }
-          body { margin: 0; font: 12pt/1.4 Georgia, serif; }
-          main { max-width: 6.9in; margin: auto; }
-          .membrete-carta { display: flex; align-items: center; justify-content: flex-end; gap: .15in; text-align: right; }
-          .membrete-carta img { width: .77in; height: auto; }
-          .membrete-carta h1 { font-size: 14pt; margin: 0; }
-          .firmas-carta { break-inside: avoid; }
-          .firmas-carta p { margin: .25em 0; }
-          .nombre-firma { font: 20pt/1.05 Allura, "Segoe Script", cursive; }
-          @media screen { body { padding: 2rem 1rem; } }
+          @page { size: letter portrait; margin: .72in .92in; }
+          body { margin: 0; color: #26313a; font: 11.5pt/1.55 Georgia, "Times New Roman", serif; }
+          main { max-width: 6.66in; margin: auto; overflow-wrap: break-word; }
+          main > p { margin: 0 0 12pt; }
+          .membrete-carta {
+            display: flex; align-items: center; gap: 13pt;
+            padding-bottom: 14pt; margin-bottom: 25pt;
+            border-bottom: 1px solid #c2ab7d;
+            font: 9.5pt/1.35 Arial, sans-serif; color: #52616a;
+          }
+          .membrete-carta img { width: .68in; height: auto; flex: none; }
+          .membrete-carta h1 {
+            margin: 0 0 4pt; font: 600 12pt/1.3 Arial, sans-serif;
+            letter-spacing: .065em; color: #173e49;
+          }
+          .titulo-carta {
+            margin: 0 0 3pt; color: #173e49;
+            font: normal 27pt/1.15 Georgia, "Times New Roman", serif;
+          }
+          main > .fecha-carta { margin-bottom: 22pt; color: #52616a; font: 10pt/1.35 Arial, sans-serif; }
+          .firmas-carta { margin-top: 20pt; break-inside: avoid; }
+          .firmantes-carta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12pt; }
+          .firmante-carta { display: flex; flex-direction: column; justify-content: flex-end; gap: 4pt; }
+          .nombre-firma { font: 21pt/1.05 Allura, "Segoe Script", cursive; color: #173e49; }
+          .cargo-firma { display: block; border-top: 1px solid #c2ab7d; padding-top: 5pt; min-height: 27pt; font: 9pt/1.3 Arial, sans-serif; }
+          .pie-carta { margin: 14pt 0 0; color: #52616a; font: 9pt/1.35 Arial, sans-serif; }
+          @media screen {
+            body { background: #eef1f2; padding: 24px 12px; }
+            main { background: white; padding: clamp(20px, 5vw, 54px); box-shadow: 0 3px 18px #26313a20; }
+          }
+          @media screen and (max-width: 500px) { .firmantes-carta { grid-template-columns: 1fr; } }
         `;
         doc.head.append(estilos);
         const nombres = new Map((perfiles.data || []).map(perfil => [perfil.rol, perfil.nombre]));

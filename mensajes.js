@@ -75,7 +75,9 @@ const mensajesSolicitud = (() => {
     agregar(direccion, 'h1', 'LAS BRISAS SPANISH (916171)');
     agregar(direccion, 'div', '1946 Old Port Isabel Rd.');
     agregar(direccion, 'div', 'Brownsville, Texas 78521');
-    agregar(destino, 'p', fecha);
+    const titulo = agregar(destino, 'h2', 'Carta de aprobación');
+    titulo.className = 'titulo-carta';
+    agregar(destino, 'p', fecha).className = 'fecha-carta';
     agregar(destino, 'p', saludo(nombre, sexo));
     agregar(destino, 'p', 'Reciba un cordial y afectuoso saludo fraternal.');
     agregar(destino, 'p', 'Con mucha alegría le informamos que el Comité de Servicio ha revisado con oración su solicitud S-73-S y que ha sido aprobada. Nos alegra ver su deseo sincero de ampliar su servicio a Jehová y de hacer más en la predicación del Reino.');
@@ -85,13 +87,16 @@ const mensajesSolicitud = (() => {
     agregar(destino, 'p', 'Con cariño y aprecio fraternal,');
     const cierre = agregar(destino, 'div', '');
     cierre.className = 'firmas-carta';
+    const firmantes = agregar(cierre, 'div', '');
+    firmantes.className = 'firmantes-carta';
     for (const { nombre, cargo } of firmas) {
-      const linea = agregar(cierre, 'p', '');
+      const linea = agregar(firmantes, 'div', '');
+      linea.className = 'firmante-carta';
       const firma = agregar(linea, 'span', nombre?.trim() || '________________________');
       if (nombre?.trim()) firma.className = 'nombre-firma';
-      agregar(linea, 'span', ' – ' + cargo);
+      agregar(linea, 'span', cargo).className = 'cargo-firma';
     }
-    agregar(cierre, 'p', 'Comité de Servicio, Congregación Las Brisas');
+    agregar(cierre, 'p', 'Comité de Servicio, Congregación Las Brisas').className = 'pie-carta';
     return logo;
   }
 
