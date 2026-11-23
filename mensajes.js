@@ -65,7 +65,16 @@ const mensajesSolicitud = (() => {
     for (const letra of id) hash = (Math.imul(hash, 31) + letra.charCodeAt(0)) >>> 0;
     const [referencia, cita] = aprobacion[hash % aprobacion.length];
     const fecha = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'America/Chicago' }).format(new Date());
-    agregar(destino, 'h1', 'Congregación Las Brisas, Brownsville, Texas');
+    const encabezado = agregar(destino, 'header', '');
+    encabezado.className = 'membrete-carta';
+    const logo = destino.ownerDocument.createElement('img');
+    logo.src = new URL('logo-las-brisas.jpg', document.baseURI).href;
+    logo.alt = '';
+    encabezado.append(logo);
+    const direccion = agregar(encabezado, 'div', '');
+    agregar(direccion, 'h1', 'LAS BRISAS SPANISH (916171)');
+    agregar(direccion, 'div', '1946 Old Port Isabel Rd.');
+    agregar(direccion, 'div', 'Brownsville, Texas 78521');
     agregar(destino, 'p', fecha);
     agregar(destino, 'p', saludo(nombre, sexo));
     agregar(destino, 'p', 'Reciba un cordial y afectuoso saludo fraternal.');
@@ -76,8 +85,14 @@ const mensajesSolicitud = (() => {
     agregar(destino, 'p', 'Con cariño y aprecio fraternal,');
     const cierre = agregar(destino, 'div', '');
     cierre.className = 'firmas-carta';
-    for (const { nombre, cargo } of firmas) agregar(cierre, 'p', (nombre?.trim() || '________________________') + ' – ' + cargo);
+    for (const { nombre, cargo } of firmas) {
+      const linea = agregar(cierre, 'p', '');
+      const firma = agregar(linea, 'span', nombre?.trim() || '________________________');
+      if (nombre?.trim()) firma.className = 'nombre-firma';
+      agregar(linea, 'span', ' – ' + cargo);
+    }
     agregar(cierre, 'p', 'Comité de Servicio, Congregación Las Brisas');
+    return logo;
   }
 
   return { confirmar, carta };

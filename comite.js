@@ -251,12 +251,26 @@ function showLogin(message) {
       doc.body.replaceChildren(contenido);
       if (tipo === 'carta') {
         const estilos = doc.createElement('style');
-        estilos.textContent = '@page { size: letter portrait; margin: .8in; } body { margin: 0; font: 12pt/1.5 Georgia, serif; } main { max-width: 6.9in; margin: auto; } h1 { font-size: 15pt; } .firmas-carta { break-inside: avoid; } .firmas-carta p { margin: .25em 0; } @media screen { body { padding: 2rem 1rem; } }';
+        const fuente = new URL('precursor-auxiliar/fonts/Allura-Regular.woff', document.baseURI);
+        estilos.textContent = `
+          @font-face { font-family: Allura; src: url("${fuente.href}") format("woff"); }
+          @page { size: letter portrait; margin: .65in .8in; }
+          body { margin: 0; font: 12pt/1.4 Georgia, serif; }
+          main { max-width: 6.9in; margin: auto; }
+          .membrete-carta { display: flex; align-items: center; justify-content: flex-end; gap: .15in; text-align: right; }
+          .membrete-carta img { width: .77in; height: auto; }
+          .membrete-carta h1 { font-size: 14pt; margin: 0; }
+          .firmas-carta { break-inside: avoid; }
+          .firmas-carta p { margin: .25em 0; }
+          .nombre-firma { font: 20pt/1.05 Allura, "Segoe Script", cursive; }
+          @media screen { body { padding: 2rem 1rem; } }
+        `;
         doc.head.append(estilos);
         const nombres = new Map((perfiles.data || []).map(perfil => [perfil.rol, perfil.nombre]));
         const cargos = ['Coordinador del Cuerpo de Ancianos', 'Secretario', 'Superintendente de Servicio'];
-        mensajesSolicitud.carta(contenido, id, fullName(app), app.sexo,
+        const logo = mensajesSolicitud.carta(contenido, id, fullName(app), app.sexo,
           ROLES.map(({ key }, i) => ({ nombre: nombres.get(key), cargo: cargos[i] })));
+        await Promise.all([logo.decode(), doc.fonts.ready]);
       } else {
         const porRol = Object.fromEntries(revisiones.data.map(revision => [revision.rol, revision]));
         const plantilla = new DOMParser().parseFromString(
