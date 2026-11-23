@@ -50,12 +50,70 @@ function showList() {
   byId('applications').replaceChildren(...matches.map(item => {
     const button = element('button', item.nombre);
     button.className = 'secondary';
-    button.append(element('small', approvalStatus(item)));
+    const complete = item.aux_approvals.length === 3;
+    const estado = element('small', approvalStatus(item));
+    estado.className = complete ? 'status Completo' : 'status En-revision';
+    button.append(estado);
     button.onclick = () => showDetail(item);
-    return button;
+    const row = element('div', '');
+    row.className = 'toolbar aux-print-row';
+    row.append(button);
+    if (complete) {
+      const menu = element('select', '');
+      menu.style.width = 'auto';
+      menu.setAttribute('aria-label', 'Imprimir ' + item.nombre);
+      for (const [value, label] of [['', 'Imprimir'], ['formulario', 'Formulario S-205b-S'], ['carta', 'Carta de aprobación']]) {
+        const option = element('option', label);
+        option.value = value;
+        menu.append(option);
+      }
+      menu.onchange = () => {
+        const tipo = menu.value;
+        menu.value = '';
+        if (tipo === 'carta') imprimirCarta(item);
+        if (tipo === 'formulario') {
+          showDetail(item);
+          window.print();
+        }
+      };
+      row.append(menu);
+    }
+    return row;
   }));
   byId('print-list').disabled = matches.length === 0;
   if (!matches.length) byId('applications').append(element('p', 'No hay solicitudes.'));
+}
+
+async function imprimirCarta(item) {
+  const vista = window.open('', '_blank');
+  if (!vista) {
+    window.alert('Permita las ventanas emergentes para imprimir la carta.');
+    return;
+  }
+  vista.opener = null;
+  const doc = vista.document;
+  doc.documentElement.lang = 'es';
+  doc.title = 'Carta de aprobación · Precursor auxiliar';
+  doc.body.textContent = 'Preparando impresión…';
+  try {
+    const { data, error } = await db.from('profiles').select('user_id,nombre')
+      .in('user_id', item.aux_approvals.map(approval => approval.user_id));
+    if (vista.closed) return;
+    if (error) throw new Error('No se pudieron cargar los nombres del comité.');
+    const nombres = new Map((data || []).map(perfil => [perfil.user_id, perfil.nombre]));
+    const cargos = ['Coordinador del Cuerpo de Ancianos', 'Secretario', 'Superintendente de Servicio'];
+    const firmas = Object.keys(roleNames).map((rol, i) => ({
+      nombre: nombres.get(item.aux_approvals.find(approval => approval.rol === rol)?.user_id),
+      cargo: cargos[i]
+    }));
+    const contenido = doc.createElement('main');
+    doc.body.replaceChildren(contenido);
+    await mensajesSolicitud.prepararCarta(contenido, item.id, item.nombre, null, firmas,
+      'de precursor auxiliar (S-205b-S)');
+    if (!vista.closed) vista.print();
+  } catch (error) {
+    if (!vista.closed) doc.body.textContent = error.message;
+  }
 }
 
 function preparePrint() {
@@ -146,7 +204,7 @@ function showDetail(item) {
 
 async function loadApplications() {
   const { data, error } = await db.from('aux_applications')
-    .select('*,aux_approvals(rol,iniciales,approved_at)').order('created_at', { ascending: false });
+    .select('*,aux_approvals(rol,iniciales,approved_at,user_id)').order('created_at', { ascending: false });
   if (error) {
     status.textContent = 'No se pudieron cargar las solicitudes.';
     return;
