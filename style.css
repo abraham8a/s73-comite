@@ -116,3 +116,13 @@ dl.info dd{margin:0}
   font-size: 1.85rem;
   line-height: 1.3;
 }
+
+@page s73-list { size: letter portrait; margin: .55in; }
+@media print {
+  .paper.s73-list { page: s73-list; break-inside: auto; margin: 0; }
+  .s73-list .tablewrap { overflow: visible; }
+  .s73-list table { table-layout: fixed; font-size: 10pt; }
+  .s73-list th, .s73-list td { overflow-wrap: anywhere; }
+  .s73-list thead { display: table-header-group; }
+  .s73-list tr { break-inside: avoid; }
+}

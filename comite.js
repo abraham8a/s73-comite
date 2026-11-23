@@ -181,20 +181,29 @@ function showLogin(message) {
     }).join('');
 
     $app.innerHTML = `
-      <section class="paper">
+      <section class="paper s73-list">
         <div class="toolbar"><h2 style="margin:0;border:0;padding:0">Solicitudes (${(a.data || []).length})</h2>
-          <input type="search" id="search" placeholder="Buscar nombre o congregación" style="max-width:280px"></div>
+          <input class="no-print" type="search" id="search" placeholder="Buscar nombre o congregación" style="max-width:280px"></div>
+        <p class="no-print"><button type="button" class="secondary" id="print-list">Imprimir lista o guardar PDF</button></p>
         <div class="tablewrap"><table>
           <thead><tr><th>Recibida</th><th>Solicitante</th><th>Congregación</th><th>Firmas del comité</th><th>Estado</th></tr></thead>
           <tbody id="rows">${rows || '<tr><td colspan="5" class="muted">Aún no hay solicitudes.</td></tr>'}</tbody>
         </table></div>
       </section>`;
+    const count = document.querySelector('.s73-list h2');
+    const listRows = [...document.querySelectorAll('#rows tr[data-q]')];
+    const printList = document.getElementById('print-list');
+    printList.disabled = listRows.length === 0;
+    printList.addEventListener('click', () => window.print());
     document.getElementById('rows').addEventListener('click', (e) => {
       const tr = e.target.closest('tr[data-id]'); if (tr) location.hash = '#/s/' + tr.dataset.id;
     });
     document.getElementById('search').addEventListener('input', (e) => {
       const q = e.target.value.trim().toLowerCase();
-      document.querySelectorAll('#rows tr[data-q]').forEach((tr) => { tr.hidden = q && !tr.dataset.q.includes(q); });
+      listRows.forEach(tr => { tr.hidden = !tr.dataset.q.includes(q); });
+      const visible = listRows.filter(tr => !tr.hidden).length;
+      count.textContent = `Solicitudes (${visible})`;
+      printList.disabled = visible === 0;
     });
   }
 
