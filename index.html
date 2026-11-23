@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Solicitud para la predicación pública especial en áreas metropolitanas</title>
-<link rel="stylesheet" href="style.css?v=metro-signature1">
+<link rel="stylesheet" href="style.css?v=metro-validation1">
 </head>
 <body>
 <main class="wrap"><section id="pin-gate" class="paper narrow"><h1>Acceso al formulario</h1><p>Escriba el código de acceso que recibió.</p><form id="pin-form"><div class="q"><label for="pin-code">Código de acceso</label><input type="password" id="pin-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required></div><div id="pin-msg" class="msg err" hidden></div><button type="submit">Continuar</button></form></section>
@@ -150,14 +150,14 @@
     <!-- honeypot against bots -->
     <div class="hp" aria-hidden="true"><label>No llenar <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
-    <div id="msg" class="msg err" hidden></div>
     <button type="submit" id="send">Enviar solicitud</button>
+    <div id="msg" class="msg err" role="alert" hidden></div>
     <p class="muted small">S-73-S 9/19</p>
   </form>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="form.js?v=metro-fields1"></script>
+<script src="form.js?v=metro-validation1"></script>
 </body>
 </html>

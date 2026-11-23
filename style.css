@@ -126,3 +126,13 @@ dl.info dd{margin:0}
   .s73-list thead { display: table-header-group; }
   .s73-list tr { break-inside: avoid; }
 }
+
+#form [aria-invalid="true"] {
+  outline: 2px solid var(--err);
+  outline-offset: 2px;
+}
+#form input[aria-invalid="true"]:not([type=radio]):not([type=checkbox]),
+#form select[aria-invalid="true"], #form textarea[aria-invalid="true"] {
+  border-color: var(--err);
+  background: #fdeceb;
+}

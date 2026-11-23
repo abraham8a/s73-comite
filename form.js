@@ -79,9 +79,62 @@
     msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  const groupLabels = {
+    sexo: 'Sexo', estado_civil: 'Estado civil',
+    desea_capacidad: 'Pregunta 8: Deseo y capacidad',
+    participo_antes: 'Pregunta 9: Participación anterior',
+    sirve_como: 'Pregunta 7: Sirve como', otroChk: 'Pregunta 7: Sirve como'
+  };
+  let validationStarted = false;
+  let showingValidation = false;
+
+  function validateForm() {
+    const missing = new Set();
+    const invalid = new Set();
+    const roles = [...form.querySelectorAll('[name="sirve_como"], #otroChk')];
+    const missingRole = !roles.some(input => input.checked);
+
+    for (const field of form.elements) {
+      const empty = (field.required && field.type !== 'radio' && !field.value.trim() && !field.validity.badInput)
+        || (field.willValidate && field.validity.valueMissing)
+        || (missingRole && roles.includes(field));
+      const incorrect = field.willValidate && !field.validity.valid && !empty;
+      if (!empty && !incorrect) {
+        field.removeAttribute('aria-invalid');
+        continue;
+      }
+      field.setAttribute('aria-invalid', 'true');
+      const date = field.closest('[data-fecha]');
+      const dateLabel = date && $(date.dataset.fecha + '_d').labels[0]?.textContent;
+      const label = groupLabels[field.name || field.id] || dateLabel ||
+        field.labels?.[0]?.textContent || field.getAttribute('aria-label');
+      const name = field.id.startsWith('cong_') ? 'Congregación: ' + label : label;
+      (empty ? missing : invalid).add(name);
+    }
+
+    const messages = [];
+    if (missing.size) messages.push('Te falta llenar algunos datos: ' + [...missing].join(', ') + '.');
+    if (invalid.size) messages.push('Revisa los datos de: ' + [...invalid].join(', ') + '.');
+    showingValidation = messages.length > 0;
+    msg.hidden = !showingValidation;
+    msg.textContent = messages.join(' ');
+    return !showingValidation;
+  }
+
+  form.noValidate = true;
+  function refreshValidation() {
+    if (validationStarted && showingValidation) validateForm();
+  }
+  form.addEventListener('input', refreshValidation);
+  form.addEventListener('change', refreshValidation);
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    msg.hidden = true;
+    validationStarted = true;
+    if (!validateForm()) {
+      msg.scrollIntoView({ block: 'nearest' });
+      return;
+    }
 
     if (cfg.SUPABASE_URL.includes('TU-PROYECTO')) {
       return showError('El sitio aún no está configurado (falta config.js).');
