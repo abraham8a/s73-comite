@@ -46,18 +46,15 @@
     </div>
 
     <!-- 4 -->
-    <h3>4. ¿Qué idiomas habla con fluidez?</h3>
-    <div class="grid">
-      <div>
-        <select id="idiomas_sel" aria-label="Idiomas" required>
-          <option value="">Seleccione…</option>
-          <option>Español</option>
-          <option>Inglés</option>
-          <option>Español e inglés</option>
-          <option value="__otro">Otro</option>
-        </select>
-      </div>
-      <div id="idiomasOtroBox" hidden><input type="text" id="idiomas_otro" maxlength="300" placeholder="Escriba los idiomas" aria-label="Otros idiomas"></div>
+    <h3 id="idiomasTitulo">4. ¿Qué idiomas habla con fluidez?</h3>
+    <div class="opts" role="group" aria-labelledby="idiomasTitulo">
+      <label><input type="checkbox" name="idiomas_sel" value="Español"> Español</label>
+      <label><input type="checkbox" name="idiomas_sel" value="Inglés"> Inglés</label>
+      <label><input type="checkbox" id="idiomasOtroChk" aria-controls="idiomasOtroBox"> Otro</label>
+    </div>
+    <div id="idiomasOtroBox" class="q" hidden>
+      <label for="idiomas_otro">Otros idiomas</label>
+      <input type="text" id="idiomas_otro" maxlength="300" placeholder="Escriba los idiomas">
     </div>
 
     <!-- 5 -->
@@ -158,6 +155,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="form.js?v=metro-validation1"></script>
+<script src="form.js?v=metro-idiomas1"></script>
 </body>
 </html>

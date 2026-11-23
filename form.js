@@ -45,9 +45,10 @@
   });
 
   // languages: dropdown, with free text when "Otro"
-  const idiomaSel = $('idiomas_sel'), idiomaOtro = $('idiomas_otro');
-  idiomaSel.addEventListener('change', () => {
-    const otro = idiomaSel.value === '__otro';
+  const idiomasCheckboxes = [...form.querySelectorAll('[name="idiomas_sel"]')];
+  const idiomaOtroChk = $('idiomasOtroChk'), idiomaOtro = $('idiomas_otro');
+  idiomaOtroChk.addEventListener('change', () => {
+    const otro = idiomaOtroChk.checked;
     $('idiomasOtroBox').hidden = !otro;
     idiomaOtro.required = otro;
     if (!otro) idiomaOtro.value = '';
@@ -80,6 +81,7 @@
   }
 
   const groupLabels = {
+    idiomas_sel: 'Idiomas', idiomasOtroChk: 'Idiomas',
     sexo: 'Sexo', estado_civil: 'Estado civil',
     desea_capacidad: 'Pregunta 8: Deseo y capacidad',
     participo_antes: 'Pregunta 9: Participación anterior',
@@ -88,16 +90,28 @@
   let validationStarted = false;
   let showingValidation = false;
 
+  function idiomasSeleccionados() {
+    const seleccion = idiomasCheckboxes.filter(input => input.checked).map(input => input.value);
+    if (idiomaOtroChk.checked) seleccion.push(idiomaOtro.value.trim());
+    return seleccion.join(', ');
+  }
+
   function validateForm() {
     const missing = new Set();
     const invalid = new Set();
     const roles = [...form.querySelectorAll('[name="sirve_como"], #otroChk')];
+    const opcionesIdioma = [...idiomasCheckboxes, idiomaOtroChk];
+    idiomaOtro.setCustomValidity(
+      idiomaOtroChk.checked && [...idiomasSeleccionados()].length > 300
+        ? 'El total de idiomas debe tener 300 caracteres o menos.' : '');
+    const missingLanguage = !opcionesIdioma.some(input => input.checked);
     const missingRole = !roles.some(input => input.checked);
 
     for (const field of form.elements) {
       const empty = (field.required && field.type !== 'radio' && !field.value.trim() && !field.validity.badInput)
         || (field.willValidate && field.validity.valueMissing)
-        || (missingRole && roles.includes(field));
+        || (missingRole && roles.includes(field))
+        || (missingLanguage && opcionesIdioma.includes(field));
       const incorrect = field.willValidate && !field.validity.valid && !empty;
       if (!empty && !incorrect) {
         field.removeAttribute('aria-invalid');
@@ -115,6 +129,7 @@
     const messages = [];
     if (missing.size) messages.push('Te falta llenar algunos datos: ' + [...missing].join(', ') + '.');
     if (invalid.size) messages.push('Revisa los datos de: ' + [...invalid].join(', ') + '.');
+    if (idiomaOtro.validity.customError) messages.push(idiomaOtro.validationMessage);
     showingValidation = messages.length > 0;
     msg.hidden = !showingValidation;
     msg.textContent = messages.join(' ');
@@ -153,8 +168,7 @@
       return showError('Marque al menos una opción en la pregunta 7 (Sirve como).');
     }
 
-    const idiomas = idiomaSel.value === '__otro' ? idiomaOtro.value.trim() : idiomaSel.value;
-    if (!idiomas) return showError('Indique los idiomas que habla con fluidez.');
+    const idiomas = idiomasSeleccionados();
 
     const v = (k) => (fd.get(k) || '').toString().trim() || null;
     const disponibilidad = {};
