@@ -136,3 +136,11 @@ dl.info dd{margin:0}
   border-color: var(--err);
   background: #fdeceb;
 }
+
+.s73-list .status:is(.Nuevo, .En-revision) { color: #d00000; }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .s73-list .status:is(.Nuevo, .En-revision) { animation: estado-pendiente 1.6s ease-in-out infinite; }
+}
+@keyframes estado-pendiente {
+  50% { color: #8b0000; background-color: #ffe6e6; }
+}
