@@ -197,7 +197,7 @@
       return showError('No se pudo enviar. Intente de nuevo. (' + error.message + ')');
     }
     form.hidden = true;
-    $('done').hidden = false;
+    mensajesSolicitud.confirmar($('done'), [row.primer_nombre, row.segundo_nombre, row.apellidos].filter(Boolean).join(' '), row.sexo);
     window.scrollTo(0, 0);
   });
 })();

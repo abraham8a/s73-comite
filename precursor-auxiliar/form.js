@@ -155,7 +155,9 @@ form.onsubmit = async event => {
     });
     if (error) throw error;
     form.hidden = true;
-    status.textContent = 'Su solicitud fue recibida por el comité de servicio de Las Brisas Spanish.';
+    status.textContent = '';
+    mensajesSolicitud.confirmar(document.querySelector('#done'), signedName);
+    window.scrollTo(0, 0);
   } catch {
     status.textContent = 'No se pudo confirmar el envío. Consulte al secretario si el problema continúa.';
     button.disabled = false;

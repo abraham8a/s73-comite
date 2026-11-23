@@ -177,7 +177,12 @@ function showLogin(message) {
         <td><strong>${esc(p.apellidos)}, ${esc(p.primer_nombre)}</strong></td>
         <td>${esc(p.cong_nombre || '')} <span class="muted small">${esc(p.cong_ciudad || '')}</span></td>
         <td>${chips}</td>
-        <td class="status ${statusClass(st)}">${esc(st)}</td></tr>`;
+        <td class="status ${statusClass(st)}">${esc(st)}${st === 'Completo' ? `
+          <select class="no-print" data-print aria-label="Imprimir solicitud">
+            <option value="">Imprimir</option>
+            <option value="formulario">Formulario S-73</option>
+            <option value="carta">Carta de aprobación</option>
+          </select>` : ''}</td></tr>`;
     }).join('');
 
     $app.innerHTML = `
@@ -196,7 +201,15 @@ function showLogin(message) {
     printList.disabled = listRows.length === 0;
     printList.addEventListener('click', () => window.print());
     document.getElementById('rows').addEventListener('click', (e) => {
+      if (e.target.closest('[data-print]')) return;
       const tr = e.target.closest('tr[data-id]'); if (tr) location.hash = '#/s/' + tr.dataset.id;
+    });
+    document.getElementById('rows').addEventListener('change', (e) => {
+      const menu = e.target.closest('[data-print]');
+      if (!menu || !menu.value) return;
+      const tipo = menu.value;
+      menu.value = '';
+      imprimirSolicitud(menu.closest('tr').dataset.id, tipo);
     });
     document.getElementById('search').addEventListener('input', (e) => {
       const q = e.target.value.trim().toLowerCase();
@@ -205,6 +218,68 @@ function showLogin(message) {
       count.textContent = `Solicitudes (${visible})`;
       printList.disabled = visible === 0;
     });
+  }
+
+  async function imprimirSolicitud(id, tipo) {
+    const vista = window.open('', '_blank');
+    if (!vista) {
+      window.alert('Permita las ventanas emergentes para imprimir la solicitud.');
+      return;
+    }
+    vista.opener = null;
+    const doc = vista.document;
+    doc.documentElement.lang = 'es';
+    doc.title = tipo === 'carta' ? 'Carta de aprobación · S-73-S' : 'Formulario S-73';
+    doc.body.textContent = 'Preparando impresión…';
+    try {
+      const [solicitud, revisiones, perfiles] = await Promise.all([
+        sb.from('applications').select('*').eq('id', id).maybeSingle(),
+        sb.from('reviews').select('*').eq('application_id', id),
+        tipo === 'carta' ? sb.from('profiles').select('nombre,rol') : { data: [] }
+      ]);
+      if (vista.closed) return;
+      if (solicitud.error || revisiones.error || perfiles.error || !solicitud.data) {
+        throw new Error('No se pudieron cargar los datos para imprimir.');
+      }
+      if (statusOf(revisiones.data || []) !== 'Completo') {
+        throw new Error('La solicitud debe estar completa para imprimir desde la lista.');
+      }
+
+      const app = solicitud.data;
+      const contenido = doc.createElement('main');
+      contenido.id = 'app';
+      doc.body.replaceChildren(contenido);
+      if (tipo === 'carta') {
+        const estilos = doc.createElement('style');
+        estilos.textContent = '@page { size: letter portrait; margin: .8in; } body { margin: 0; font: 12pt/1.5 Georgia, serif; } main { max-width: 6.9in; margin: auto; } h1 { font-size: 15pt; } .firmas-carta { break-inside: avoid; } .firmas-carta p { margin: .25em 0; } @media screen { body { padding: 2rem 1rem; } }';
+        doc.head.append(estilos);
+        const nombres = new Map((perfiles.data || []).map(perfil => [perfil.rol, perfil.nombre]));
+        const cargos = ['Coordinador del Cuerpo de Ancianos', 'Secretario', 'Superintendente de Servicio'];
+        mensajesSolicitud.carta(contenido, id, fullName(app), app.sexo,
+          ROLES.map(({ key }, i) => ({ nombre: nombres.get(key), cargo: cargos[i] })));
+      } else {
+        const porRol = Object.fromEntries(revisiones.data.map(revision => [revision.rol, revision]));
+        const plantilla = new DOMParser().parseFromString(
+          hojasSolicitud(app, porRol, { ROLES, QUESTIONS, CRITERIA, DIAS, YN, esc, fmtDate }), 'text/html');
+        contenido.append(doc.importNode(plantilla.body.firstElementChild, true));
+        const estilos = doc.createElement('style');
+        estilos.textContent = '@media screen { .hojas-s73 svg { display: block; width: 100%; max-width: 8.5in; margin: auto; } }';
+        doc.head.append(estilos);
+        const hoja = doc.createElement('link');
+        hoja.rel = 'stylesheet';
+        hoja.href = document.querySelector('link[rel="stylesheet"]').href;
+        await new Promise((resolve, reject) => {
+          hoja.onload = resolve;
+          hoja.onerror = () => reject(new Error('No se pudo cargar el formato de impresión.'));
+          doc.head.append(hoja);
+        });
+        // The original form hides its print sheets on screen. Show them in the dedicated preview.
+        estilos.textContent += '@media screen { .hojas-s73 { display: block; } }';
+      }
+      if (!vista.closed) vista.print();
+    } catch (error) {
+      if (!vista.closed) doc.body.textContent = error.message;
+    }
   }
 
   // ---------- detail ----------
