@@ -1,7 +1,6 @@
 // Plantilla de impresión S-73-S 9/19. Las coordenadas se expresan en puntos de una hoja carta.
 function hojasSolicitud(a, evaluaciones, { ROLES, QUESTIONS, CRITERIA, DIAS, YN, esc, fmtDate }) {
   const hojas = [];
-  const anexos = [];
   const lapiz = document.createElement('canvas').getContext('2d');
   let dibujo = '';
   const fuente = 'Times New Roman';
@@ -11,8 +10,10 @@ function hojasSolicitud(a, evaluaciones, { ROLES, QUESTIONS, CRITERIA, DIAS, YN,
     lapiz.font = (negrita ? 'bold ' : '') + tam + 'px "' + fuente + '"';
     return lapiz.measureText(texto).width;
   }
-  function texto(x, y, valor, tam = 9, centro = false, negrita = false) {
-    dibujo += `<text x="${x}" y="${y}" font-size="${tam}" text-anchor="${centro ? 'middle' : 'start'}" font-weight="${negrita ? 'bold' : 'normal'}">${esc(valor)}</text>`;
+  function texto(x, y, valor, tam = 9, centro = false, negrita = false, limite = null) {
+    const longitud = limite && ancho(valor, tam, negrita) > limite
+      ? ` textLength="${limite}" lengthAdjust="spacingAndGlyphs"` : '';
+    dibujo += `<text x="${x}" y="${y}" font-size="${tam}"${longitud} text-anchor="${centro ? 'middle' : 'start'}" font-weight="${negrita ? 'bold' : 'normal'}">${esc(valor)}</text>`;
   }
   function linea(x, y, fin, hasta = y, puntos = false) {
     dibujo += `<line x1="${x}" y1="${y}" x2="${fin}" y2="${hasta}" stroke="black" stroke-width=".65" ${puntos ? 'stroke-dasharray="1 1.4"' : ''}/>`;
@@ -21,13 +22,9 @@ function hojasSolicitud(a, evaluaciones, { ROLES, QUESTIONS, CRITERIA, DIAS, YN,
     dibujo += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="black" stroke-width=".8"/>`;
   }
   function ajustar(x, y, w, valor, etiqueta, tam = 10) {
-    let s = String(valor ?? '').trim();
-    while (tam > 8 && ancho(s, tam) > w - 4) tam -= .5;
-    if (ancho(s, tam) > w - 4 || /[\r\n]/.test(s)) {
-      anexos.push([etiqueta, s]);
-      s = 'Ver anexo ' + anexos.length;
-    }
-    texto(x + w / 2, y, s, tam, true);
+    const s = String(valor ?? '').trim().replace(/\s+/g, ' ');
+    while (tam > 7 && ancho(s, tam) > w - 4) tam -= .5;
+    texto(x + w / 2, y, s, tam, true, false, w - 4);
   }
   function campo(x, y, w, valor, etiqueta, pie = '') {
     ajustar(x, y - 2, w, valor, etiqueta);
@@ -180,11 +177,16 @@ function hojasSolicitud(a, evaluaciones, { ROLES, QUESTIONS, CRITERIA, DIAS, YN,
       ajustar(bordes[j+1],y+18,bordes[j+2]-bordes[j+1],dato?.g,nombre);
       if (dato?.n) notas.push(siglas[j]+' '+dato.n);
     });
-    const filas = renglones(notas.join('\n'),171,7.6);
-    if (filas.length > 3) {
-      anexos.push([nombre + ' · Comentarios', notas.join('\n')]);
-      texto(386,y+17,'Ver anexo '+anexos.length,8.5);
-    } else filas.forEach((s,j) => texto(386,y+9+j*9,s,7.6));
+    const comentario = notas.join(' · ').replace(/\s+/g, ' ');
+    if (comentario) {
+      let tam = 7.6;
+      let filas = renglones(comentario, 169, tam);
+      while (filas.length * tam * 1.15 > 25) {
+        tam *= .9;
+        filas = renglones(comentario, 169, tam);
+      }
+      filas.forEach((s,j) => texto(386, y + 2 + tam + j * tam * 1.15, s, tam));
+    }
   });
   const revision = 'El comité de servicio debe repasar este formulario. Se tomarán en cuenta las observaciones del superintendente de grupo correspondiente. El solicitante no debe haber sido censurado o readmitido en el último año y debe estar libre de cualquier restricción.';
   renglones(revision,508,9).forEach((s,i) => texto(52,552+i*11,s));
@@ -200,22 +202,5 @@ function hojasSolicitud(a, evaluaciones, { ROLES, QUESTIONS, CRITERIA, DIAS, YN,
   renglones('Si el superintendente de circuito aprueba al solicitante, debe enviarle este formulario al anciano coordinador. Se guardará una copia en el archivo del superintendente de circuito.',232,9,true).forEach((s,i) => texto(326,695+i*11,s,9,false,true));
   cerrarHoja();
 
-  let y = 0;
-  function iniciarAnexo() {
-    texto(306,58,'S-73-S · Continuación de las casillas',13,true,true);
-    y = 82;
-  }
-  anexos.forEach(([etiqueta, valor], i) => {
-    if (!y) iniciarAnexo();
-    if (y > 686) { cerrarHoja(); iniciarAnexo(); }
-    texto(52,y,(i+1)+'. '+etiqueta,10,false,true);
-    y += 15;
-    for (const s of renglones(valor,502,10)) {
-      if (y > 726) { cerrarHoja(); iniciarAnexo(); }
-      texto(56,y,s,10); y += 13;
-    }
-    y += 12;
-  });
-  if (y) cerrarHoja();
   return '<div class="hojas-s73">' + hojas.join('') + '</div>';
 }

@@ -95,8 +95,8 @@ dl.info dd{margin:0}
   body:has(.hojas-s73), #app:has(.hojas-s73) { margin: 0; padding: 0; width: 100%; max-width: none; }
   #app:has(.hojas-s73) > :not(.hojas-s73) { display: none !important; }
   .hojas-s73 { display: block; }
-  .hojas-s73 svg { display: block; width: 8.5in; height: 11in; break-inside: avoid; }
-  .hojas-s73 svg + svg { break-before: page; }
+  .hojas-s73 svg { display: block; width: 99%; height: auto; max-height: 10.9in; margin: 0 auto; page-break-inside: avoid; break-inside: avoid; }
+  .hojas-s73 svg + svg { page-break-before: always; break-before: page; }
 }
 
 .portal-switch { color: inherit; font-size: .9rem; }
